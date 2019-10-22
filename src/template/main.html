@@ -1,0 +1,78 @@
+<%@ Reference VirtualPath="~masterurl/custom.master" %>
+<%@ Page language="C#"  Inherits="Microsoft.SharePoint.Publishing.PublishingLayoutPage,Microsoft.SharePoint.Publishing,Version=15.0.0.0,Culture=neutral,PublicKeyToken=71e9bce111e9429c" meta:progid="SharePoint.WebPartPage.Document" %>
+
+<%@ Register Tagprefix="SharePointWebControls" Namespace="Microsoft.SharePoint.WebControls" Assembly="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
+<%@ Register Tagprefix="WebPartPages" Namespace="Microsoft.SharePoint.WebPartPages" Assembly="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
+<%@ Register Tagprefix="PublishingWebControls" Namespace="Microsoft.SharePoint.Publishing.WebControls" Assembly="Microsoft.SharePoint.Publishing, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
+<%@ Register Tagprefix="PublishingNavigation" Namespace="Microsoft.SharePoint.Publishing.Navigation" Assembly="Microsoft.SharePoint.Publishing, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
+<%@Register TagPrefix="PublishingNavigation" Namespace="Microsoft.SharePoint.Publishing.Navigation" Assembly="Microsoft.SharePoint.Publishing, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"%>
+<asp:Content ContentPlaceholderID="PlaceHolderAdditionalPageHead" runat="server">
+  <SharePointWebControls:CssRegistration name="<% $SPUrl:~sitecollection/Style Library/~language/Themable/Core Styles/pagelayouts15.css %>"
+    runat="server" />
+
+
+  <PublishingWebControls:EditModePanel runat="server">
+    <!-- Styles for edit mode only-->
+    <SharePointWebControls:CssRegistration name="<% $SPUrl:~sitecollection/Style Library/~language/Themable/Core Styles/editmode15.css %>"
+      After="<% $SPUrl:~sitecollection/Style Library/~language/Themable/Core Styles/pagelayouts15.css %>" runat="server" />
+  </PublishingWebControls:EditModePanel>
+  <SharePointWebControls:FieldValue id="PageStylesField" FieldName="HeaderStyleDefinitions" runat="server" />
+  <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S"
+    crossorigin="anonymous"> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js"></script> -->
+  <!-- <base href="/capex/Pages/main.aspx/"> -->
+  <!-- <link rel="stylesheet" type="text/css" href="<asp:Literal runat="server" Text="<%$SPUrl:~site/SiteAssets/cernext/styles.css%>" />"> -->
+  <!-- <link rel="stylesheet" type="text/css" href="<asp:Literal runat="server" Text="<%$SPUrl:~sitecollection/SiteAssets/lib/fontawesome/css/font-awesome.css%>" />"> -->
+  <!-- <link rel="stylesheet" type="text/css" href="<asp:Literal runat="server" Text="<%$SPUrl:~site/SiteAssets/app.css%>" />"> -->
+  <!-- <link rel="stylesheet" href="http://allenfang.github.io/react-bootstrap-table/css/react-bootstrap-table-all.min.css"> -->
+  <link rel="stylesheet" href="https://unpkg.com/react-select@1.2.1/dist/react-select.css">
+</asp:Content>
+<asp:Content ContentPlaceholderID="PlaceHolderPageTitle" runat="server">
+  <SharePointWebControls:FieldValue id="PageTitle" FieldName="Title" runat="server" />
+</asp:Content>
+<asp:Content ContentPlaceholderID="PlaceHolderPageTitleInTitleArea" runat="server">
+  <SharePointWebControls:FieldValue FieldName="Title" runat="server" />
+</asp:Content>
+<asp:Content ContentPlaceHolderId="PlaceHolderTitleBreadcrumb" runat="server">
+  <SharePointWebControls:ListSiteMapPath runat="server" SiteMapProviders="CurrentNavigationSwitchableProvider"
+    RenderCurrentNodeAsLink="false" PathSeparator="" CssClass="s4-breadcrumb" NodeStyle-CssClass="s4-breadcrumbNode"
+    CurrentNodeStyle-CssClass="s4-breadcrumbCurrentNode" RootNodeStyle-CssClass="s4-breadcrumbRootNode"
+    NodeImageOffsetX=0 NodeImageOffsetY=289 NodeImageWidth=16 NodeImageHeight=16 NodeImageUrl="/_layouts/15/images/fgimg.png?rev=23"
+    HideInteriorRootNodes="true" SkipLinkText="" />
+</asp:Content>
+<asp:Content ContentPlaceholderID="PlaceHolderMain" runat="server">
+  <div class="article article-body" style="display: none">
+    <PublishingWebControls:EditModePanel runat="server" CssClass="edit-mode-panel title-edit">
+      <SharePointWebControls:TextField runat="server" FieldName="Title" />
+    </PublishingWebControls:EditModePanel>
+    <div class="article-content">
+      <PublishingWebControls:RichHtmlField FieldName="PublishingPageContent" HasInitialFocus="True" MinimumEditHeight="400px"
+        runat="server" />
+    </div>
+    <PublishingWebControls:EditModePanel runat="server" CssClass="edit-mode-panel roll-up">
+      <PublishingWebControls:RichImageField FieldName="PublishingRollupImage" AllowHyperLinks="false" runat="server" />
+      <asp:Label text="<%$Resources:cms,Article_rollup_image_text15%>" CssClass="ms-textSmall" runat="server" />
+    </PublishingWebControls:EditModePanel>
+  </div>
+
+  <!-- people pickers js -->
+  <!-- Load third party scripts required by the people picker -->
+  <script src="/_layouts/15/ScriptResx.ashx?name=sp.res&culture=en-us"></script>
+    <script src="/_layouts/15/MicrosoftAjax.js"></script>
+  <script src="/_layouts/15/sp.runtime.js"></script>
+  <script src="/_layouts/15/sp.js"></script>
+  <script  src="/_layouts/15/sp.init.js"></script>
+  <script src="/_layouts/15/sp.workflowservices.js"></script>
+  <script src="/_layouts/15/1033/strings.js"></script>
+  <script src="/_layouts/15/SP.UI.Controls.js"></script>
+  <script src="/_layouts/15/clienttemplates.js"></script>
+  <script src="/_layouts/15/clientforms.js"></script>
+  <script src="/_layouts/15/clientpeoplepicker.js"></script>
+  <script src="/_layouts/15/autofill.js"></script>
+  <script src="/_layouts/15/sp.RequestExecutor.js"></script>
+  <script src="/_layouts/15/sp.ui.dialog.js"></script>
+ 
+  <div id="root"></div>
+
+  <body></body>
+</asp:Content>
