@@ -1,0 +1,14 @@
+
+.vscode
+.DS_STORE
+node_modules
+.module-cache
+*.log*
+build
+dist
+/cerreport
+config.json
+package-lock.json
+/certotalamount
+/costcenter-request
+config
