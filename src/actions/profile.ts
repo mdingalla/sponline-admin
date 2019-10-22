@@ -18,17 +18,17 @@ export function getStaffMaster(id)
     return function(dispatch) {
         Promise.all([
           StaffMasterApi.getUser(id),
-          StaffMasterApi.getStaffMasterByWindowsId(id)
+          // StaffMasterApi.getStaffMasterByWindowsId(id)
         ]).then(result => {
             const user = result[0];
-          const staff = result[1];
+          // const staff = result[1];
           
           const isAdmin = user.Groups.results.filter(x=>x.Title == SPADMIN).length > 0;
     
           dispatch(
             staffMasterSuccess({
               User: result[0],
-              Staff: staff && staff.length > 0 ? staff[0] : null,
+              // Staff: staff && staff.length > 0 ? staff[0] : null,
               IsAdmin:isAdmin
             })
           );

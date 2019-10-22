@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { configureStore } from './store';
-import Layout from './containers/Layout';
+import Layout from './containers/Layout/cerReport';
 import AppRoutes from './routes/admin';
 import {ConnectedRouter } from 'react-router-redux';
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";

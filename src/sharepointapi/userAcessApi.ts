@@ -2,6 +2,7 @@ import {sp, RenderListDataOptions, RenderListDataParameters, ContentType, Web, C
 import StaffMasterApi from './staffMasterApi';
 import Utility from '../util';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
+import UserApi from './userApi';
 
 
 const UserAccessRequest = "UserAccessRequest";
@@ -50,26 +51,28 @@ class UserAccessApi {
     }
 
     static async  ConvertPersona(userid: any, profile = true) {
-      let query = profile
-        ? await StaffMasterApi.getStaffMasterByWindowsId(userid)
-        : await StaffMasterApi.GetStaffById(userid);
+      // let query = profile
+      //   ? await StaffMasterApi.getStaffMasterByWindowsId(userid)
+      //   : await StaffMasterApi.GetStaffById(userid);
+
+      const query = await UserApi.GetUserById(userid)
     
-        let user = profile ? query[0] : query;
+        let user = query;
     
         if (user) {
           return {
             imageUrl: "",
             imageInitials:Utility.getInitial(user.Title),
             // imageInitials: user.EmpNo,
-            id: user.WindowsIDId,
+            id: user.Id,
             text: user.Title,
             key: user.Id,
             // tertiaryText: user.Title,
-            tertiaryText: user.Plant,
+            tertiaryText: user.Office,
             // optionalText:user.Title,
-            optionalText: user.Cost_x0020_Centre,
+            optionalText: user.Department,
             // primaryText: user.Title,
-            secondaryText: user.Title
+            secondaryText: user.JobTitle
           } as IPersonaProps
         }
     }
