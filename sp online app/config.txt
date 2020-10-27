@@ -1,0 +1,6 @@
+The app identifier has been successfully created.
+Client Id:  	ba4be9b6-c072-425a-9777-b05800813976
+Client Secret:  	BeXL0Nx7beqA0Deg8aS4GhU/G5ifQ7GdZb9yGegakZQ=
+Title:  	iConnect
+App Domain:  	iconnect.interplex.com
+Redirect URI:  	https://iconnect.interplex.com/SitePages/Home.aspx

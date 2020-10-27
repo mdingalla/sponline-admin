@@ -15,8 +15,7 @@ import { TodoItemData } from '../../../types/models';
 
 export namespace Dashboard {
   export interface Props extends RouteComponentProps<void> {
-    todos: TodoItemData[];
-    // actions: typeof TodoActions;
+    
   }
 
   export interface State {

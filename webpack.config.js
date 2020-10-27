@@ -193,7 +193,7 @@ module.exports = {
       // template: require('html-webpack-template'),
 
       template: './template/main.html', //if main
-      filename: 'MainApp.aspx' //only
+      filename: 'AdminApp.aspx' //only
       // template:'./template/ptc.html',
       // filename:'ptcnext.html'
       // template: './template/homepage.html',

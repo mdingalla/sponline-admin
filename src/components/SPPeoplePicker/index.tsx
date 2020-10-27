@@ -85,7 +85,8 @@ interface SPClientPeoplePickerElement extends Element {
 
 
   private _ClientPeoplePickerSearchUser = (filterText: string, currentPersonas: IPersonaProps[], limitResults?: number) => {
-    const filter = `(substringof('${filterText}',FirstName) or substringof('${filterText}',LastName) or substringof('${filterText}',Title) or substringof('${filterText}',EMail)) and ContentType eq 'Person'`
+    // const filter = `(substringof('${filterText}',FirstName) or substringof('${filterText}',LastName) or substringof('${filterText}',Title) or substringof('${filterText}',EMail)) and ContentType eq 'Person'`
+    const filter = `(substringof('${filterText}',Title) or substringof('${filterText}',EMail))`
 
     if (filterText) {
      return UserApi.GetUsers(filter)

@@ -36,7 +36,7 @@ const columns = (props:PlantMasterPage.Props,state:PlantMasterPage.State,ref:Pla
     },
     {
         dataField:'ccp',
-        text:'Actgion',
+        text:'Action',
         isDummyField: true,
         formatter:(cellContent,row) => {
             return (<div>
@@ -125,6 +125,13 @@ class PlantMasterPage extends React.Component<PlantMasterPage.Props,PlantMasterP
                                
                                 />
                                 <ExportCSVButton { ...props.csvProps }>CSV Export</ExportCSVButton>
+                                <button type="button" 
+                                    onClick={()=>{
+                                        window.location.href = _spPageContextInfo.webAbsoluteUrl
+                                    }}
+                                    className="btn btn-danger">
+                                        Close
+                                    </button>
                             </div>
                         )
                     }

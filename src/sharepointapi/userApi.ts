@@ -5,7 +5,7 @@ sp.setup({
         headers: {
           Accept: "application/json;odata=verbose",
         },
-        baseUrl:"https://interplexgroup.sharepoint.com/sites/Region/Corp/legal"
+        baseUrl:"https://interplexgroup.sharepoint.com/sites/app"
       }
 })
 
@@ -14,7 +14,7 @@ class UserApi {
     
       // return sp.web.siteUsers.filter(filter).get();
 
-      return sp.web.siteUserInfoList.items.filter(filter).get();
+      return sp.web.siteUsers.filter(filter).get();
   }
 
   static GetUserById(id){

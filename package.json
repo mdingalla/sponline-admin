@@ -11,7 +11,7 @@
     "build": "webpack -p --progress --mode production",
     "testdev": "webpack  --progress --mode development",
     "testbuild": "webpack -p --progress --mode production ",
-    "up": "node spcleanup && gulp up"
+    "up": "gulp up"
   },
   "license": "MIT",
   "devDependencies": {
