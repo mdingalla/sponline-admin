@@ -3,6 +3,7 @@ import _ = require("lodash");
 
 const TRFORMS = "TR FORMS";
 const TRDETAILS = "TRDetails";
+const SPO_TRAVEL_LIST = "TravelRequest";
 
 let url =  "https://interplexgroup.sharepoint.com/sites/app/travel";
 let myWeb = new Web(url);
@@ -36,15 +37,21 @@ class TravelApi {
       .get();
   }
 
-  static TravelDetailsSearch(searchtext) {
-    // let filter = "substringof('" + searchtext + "',Title) or substringof('" + searchtext + "',Employee_x0020_No)";
-    let filter = "substringof('" + searchtext + "',Title)";
-    return myWeb.lists
-      .getByTitle(TRDETAILS)
-      .items.filter(filter)
-      .orderBy("Modified", false)
-      .select("*,Author/Id,Author/Title,Editor/Id,Editor/Title")
-      .expand("Author/Id,Author/Title,Editor/Id,Editor/Title")
+  // static TravelDetailsSearch(searchtext) {
+  //   // let filter = "substringof('" + searchtext + "',Title) or substringof('" + searchtext + "',Employee_x0020_No)";
+  //   let filter = "substringof('" + searchtext + "',Title)";
+  //   return myWeb.lists
+  //     .getByTitle(TRDETAILS)
+  //     .items.filter(filter)
+  //     .orderBy("Modified", false)
+  //     .select("*,Author/Id,Author/Title,Editor/Id,Editor/Title")
+  //     .expand("Author/Id,Author/Title,Editor/Id,Editor/Title")
+  //     .get();
+  // }
+
+  static FindTravelDetails(title){
+    return myWeb.lists.getByTitle(TRDETAILS)
+      .items.filter(`Title eq '${title}'`)
       .get();
   }
 
@@ -54,6 +61,14 @@ class TravelApi {
       .items.filter(filter)
       .top(itemcount)
       .orderBy(orderby || "ID", ascending)
+      .get();
+  }
+
+  
+
+  static GetTravelId(id){
+    return myWeb.lists.getByTitle(SPO_TRAVEL_LIST)
+      .items.getById(id)
       .get();
   }
 
@@ -217,6 +232,13 @@ class TravelApi {
       .getByTitle(TRFORMS)
       .items.getById(id)
       .file.getText();
+  }
+
+  static async UpdateTravelRequest(id,payload){
+    return myWeb.lists
+      .getByTitle(SPO_TRAVEL_LIST)
+      .items.getById(id)
+      .update(payload);
   }
 }
 

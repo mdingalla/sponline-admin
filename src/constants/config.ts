@@ -1,6 +1,7 @@
 export const pagePath = _spPageContextInfo.webServerRelativeUrl + "Pages/MainApp.aspx";
 export const AdminPagePath = _spPageContextInfo.webServerRelativeUrl + "/Pages/AdminApp.aspx";
 export const TRImportPagePath = `${AdminPagePath}/trdetailsimport`;
+export const TRAdmin = `${AdminPagePath}/trutil`;
 export const SignatoryAdminPagePath = `${AdminPagePath}/signatory/:id`;
 export const SharePointOnlineUrl = `https://interplexgroup.sharepoint.com/sites/app`
 export const CerReportpagePath = _spPageContextInfo.webServerRelativeUrl + "/SitePages/CERReport.aspx";
