@@ -11,6 +11,9 @@ import travelWrapper from '../../components/TravelHOC';
 // import 'bootstrap/dist/css/bootstrap.css';
 import '!style-loader!css-loader!./override.css';
 import { TodoItemData } from '../../../types/models';
+import { PettyCashPTCGLItemImport } from '../../components/PettyCash';
+import { TRImportPagePath } from '../../constants/config';
+import { TravelDetailsImport } from '../../components/Travel/import';
 
 
 export namespace Dashboard {
@@ -33,9 +36,22 @@ export class Dashboard extends React.Component<Dashboard.Props, Dashboard.State>
   
   
   render() {
+
+    let form = null;
+
+    switch (this.props.location.pathname) {
+      case TRImportPagePath:
+        form = <TravelDetailsImport />;
+        break;
+    
+      default:
+        form = <PettyCashPTCGLItemImport />;
+        break;
+    }
+
     return (
       <div className="row-fluid">
-        Main
+        {form}
     </div>
 
     );

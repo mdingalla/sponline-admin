@@ -7,8 +7,8 @@ const PettyCashReimbursementRequest = "PettyCashReimbursementRequest";
 const GLITEMS = "PTC GL Items";
 const GLDESCRIPTION = "GL Description";
 
-// let myWeb = new pnp.Web("https://iconnect.interplex.com/PettyCash");
-let url = window.location.protocol + "//iconnect.interplex.com/PettyCash";
+
+let url =  "https://interplexgroup.sharepoint.com/sites/app/pettycash";
 let myWeb = new Web(url);
 // let myWeb = new pnp.Web(_spPageContextInfo.webAbsoluteUrl);
 

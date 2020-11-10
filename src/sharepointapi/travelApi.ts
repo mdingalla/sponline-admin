@@ -4,8 +4,7 @@ import _ = require("lodash");
 const TRFORMS = "TR FORMS";
 const TRDETAILS = "TRDetails";
 
-// let myWeb = new pnp.Web("https://iconnect.interplex.com/Travel");
-let url = window.location.protocol + "//iconnect.interplex.com/Travel";
+let url =  "https://interplexgroup.sharepoint.com/sites/app/travel";
 let myWeb = new Web(url);
 // let myWeb = new pnp.Web(_spPageContextInfo.webAbsoluteUrl);
 sp.setup({
@@ -125,12 +124,23 @@ class TravelApi {
       });
   }
 
+
+  static AddTRDetails(spObj){
+    return myWeb.lists
+    .getByTitle(TRDETAILS)
+    .items
+    .add(spObj);
+  }
+
+
   static UpdateTRDetails(id, spObj) {
     return myWeb.lists
       .getByTitle(TRDETAILS)
       .items.getById(id)
       .update(spObj);
   }
+
+  
 
 
   static GetTaskByUserId(userid){
