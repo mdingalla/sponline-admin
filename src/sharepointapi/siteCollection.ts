@@ -14,6 +14,9 @@ sp.setup({
 });
 
 class SiteCollectionApi {
+    static GetAllGroups(){
+        return myWeb.siteGroups.get();
+    }
     static GetUsersInGroup(grpname){
 
         return myWeb.siteGroups.getByName(grpname)

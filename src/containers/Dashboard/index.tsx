@@ -12,9 +12,10 @@ import travelWrapper from '../../components/TravelHOC';
 import '!style-loader!css-loader!./override.css';
 import { TodoItemData } from '../../../types/models';
 import { PettyCashPTCGLItemImport } from '../../components/PettyCash';
-import { TRAdmin, TRImportPagePath } from '../../constants/config';
+import { GroupsPagePath, TRAdmin, TRImportPagePath } from '../../constants/config';
 import { TravelDetailsImport } from '../../components/Travel/import';
 import { TravelAdmin } from '../../components/TRAdmin';
+import GroupsPage from '../../components/Groups';
 
 
 export namespace Dashboard {
@@ -41,6 +42,10 @@ export class Dashboard extends React.Component<Dashboard.Props, Dashboard.State>
     let form = null;
 
     switch (this.props.location.pathname) {
+      
+      case GroupsPagePath:
+        form = <GroupsPage />;
+        break;
 
       case TRAdmin:
         form = <TravelAdmin />;
