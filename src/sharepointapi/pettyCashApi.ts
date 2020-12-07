@@ -6,6 +6,8 @@ import { GLItem } from "../../types/models";
 const PettyCashReimbursementRequest = "PettyCashReimbursementRequest";
 const GLITEMS = "PTC GL Items";
 const GLDESCRIPTION = "GL Description";
+const PTCNEXT = "PTCNext";
+const PTCNEXTITEMS = "PTCNextItems";
 
 
 let url =  "https://interplexgroup.sharepoint.com/sites/app/pettycash";
@@ -113,6 +115,15 @@ class PettyCashApi {
   {
     return myWeb.lists.getByTitle(GLITEMS)
       .items.getById(id).delete();
+  }
+
+  static GetPTCItemsByPTCId(id: number): Promise<any[]> {
+    return myWeb.lists
+      .getByTitle(PTCNEXTITEMS)
+      .items
+      // .orderBy('DateFrom')
+      .filter(`PTCNextRef eq ${id}`)
+      .get();
   }
 
   static GetPettyCash(
@@ -288,6 +299,18 @@ class PettyCashApi {
       ViewXml: xml
     };
     return myWeb.lists.getByTitle("Tasks").getItemsByCAMLQuery(camlQuery);
+  }
+
+
+  static PTCNextQuery(searchtext) {
+  
+    return myWeb.lists
+      .getByTitle(PTCNEXT)
+      .items.filter(searchtext)
+      .orderBy("Modified", false)
+      .select("*,Author/Id,Author/Title,Editor/Id,Editor/Title")
+      .expand("Author/Id,Author/Title,Editor/Id,Editor/Title")
+      .get();
   }
 }
 

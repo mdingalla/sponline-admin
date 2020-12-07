@@ -9,6 +9,7 @@ import travelWrapper from "../../components/TravelHOC";
 
 
 import { SharePointRestResult } from "../../../types/models";
+import { PTCGLItemFix } from "../../components/PettyCash/ptcglitem";
 // import UploadSupplierOnline from "../../components/SPOnline/uploadSupplier";
 
 export namespace Playground {
@@ -37,6 +38,7 @@ export class Playground extends React.Component<
       <div className="col-md-12">
         <div className="row-fluid">
           <div className="col-lg-12">
+            <PTCGLItemFix />
             {/* <UploadSupplierOnline /> */}
             {/* <TravelAttendanceSync /> */}
             {/* <CostCentreHeadCount /> */}
