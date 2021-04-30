@@ -9,13 +9,24 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
 
-import { BootstrapTableOptions, AdminPagePath } from "../../constants/config";
+import { BootstrapTableOptions, AdminPagePath, GroupsPath } from "../../constants/config";
 import SiteCollectionApi from "../../sharepointapi/siteCollection";
 
 const columns = ()=>  [
     {
         dataField:'Title',
-        text:'Group Name'
+        text:'Group Name',
+        formatter:(cellContent,row) => {
+            return (<div>
+                <a target="_blank"
+                 href={`${AdminPagePath}/group/${row.Id}`}>
+                     {row.Title}
+                 </a>
+                {/* <button type="button" 
+                onClick={()=>{ref.handleNavigateSignatory(row.Id)}}
+                className="btn btn-primary">Signatories</button> */}
+            </div>)
+        }
     },
     {
         dataField:'OwnerTitle',

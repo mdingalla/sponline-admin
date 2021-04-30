@@ -35,11 +35,11 @@ gulp.task('up', function () {
           checkin: true,
           checkinType: 1,
         }, {
-          // username: spusername,
-          // password: sppassword,
-          // online:true
-          clientId: addinConfig.clientId,
-        clientSecret: 'BeXL0Nx7beqA0Deg8aS4GhU/G5ifQ7GdZb9yGegakZQ='
+          username: spusername,
+          password: sppassword,
+          online:true
+        //   clientId: addinConfig.clientId,
+        // clientSecret: 'BeXL0Nx7beqA0Deg8aS4GhU/G5ifQ7GdZb9yGegakZQ='
         }, {
           file: file,
           folder: spPageFolder,
@@ -58,11 +58,11 @@ gulp.task('up', function () {
           checkin: true,
           checkinType: 1
         }, {
-          // username: spusername,
-          // password: sppassword,
-          // online:true
-          clientId: addinConfig.clientId,
-          clientSecret: 'BeXL0Nx7beqA0Deg8aS4GhU/G5ifQ7GdZb9yGegakZQ='
+          username: spusername,
+          password: sppassword,
+          online:true
+          // clientId: addinConfig.clientId,
+          // clientSecret: 'BeXL0Nx7beqA0Deg8aS4GhU/G5ifQ7GdZb9yGegakZQ='
         }, {
           file: file,
           folder: spSiteAssetsFolder

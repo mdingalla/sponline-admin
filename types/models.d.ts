@@ -1,6 +1,9 @@
 import { IPersonaProps } from "office-ui-fabric-react/lib-es2015/Persona";
 import { SAP, COGNOS, TAPPLENT, PAYROLL } from "../src/constants/filters";
 
+declare interface IRenderListDataAsStreamResult {
+  Row:any[]
+}
 
 /** TodoMVC model definitions **/
 declare interface ReactSelectValue {

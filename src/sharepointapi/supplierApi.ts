@@ -4,7 +4,7 @@ const Suppliers  = "Suppliers";
 const SupplierMaster = "SupplierMaster"
 
 // let myWeb = new pnp.Web("https://iconnect.interplex.com/supplierapp");
-let url = window.location.protocol + '//iconnect.interplex.com/supplierapp'
+let url = window.location.protocol + '//interplexgroup.sharepoint.com/sites/app'
 let myWeb = new Web(url);
 // let myWeb = new pnp.Web(_spPageContextInfo.webAbsoluteUrl);
 sp.setup({
@@ -34,6 +34,27 @@ class SupplierApi {
             .items.top(10)
             .skip(0).get()
 
+    }
+
+    static GetSupplierMasterByVendorCode(code){
+        return myWeb.lists.getByTitle(SupplierMaster)
+            .items.filter(`VendorCode eq '${code}'`)
+            .get();
+    }
+
+
+    static AddUpdateSupplierMaster(payload,id){
+        if(id){
+            return myWeb.lists.getByTitle(SupplierMaster)
+                .items.getById(id)
+                .update(payload);
+        }
+        else
+        {
+            return myWeb.lists.getByTitle(SupplierMaster)
+                .items
+                .add(payload);
+        }
     }
 }
 export default SupplierApi;

@@ -1,10 +1,11 @@
 import {sp, RenderListDataOptions, RenderListDataParameters, ContentType, Web, CamlQuery, PagedItemCollection} from '@pnp/sp'
 import profile from "../reducers/profile";
 import { IPersona } from "office-ui-fabric-react/lib/Persona";
-
+import CamlBuilder = require("camljs");
 import moment = require("moment");
-import { SharePointSPSUser, StaffMasterADData } from "../../types/models";
+import { IRenderListDataAsStreamResult, SharePointSPSUser, StaffMasterADData } from "../../types/models";
 
+const camlBuilder = new CamlBuilder();
 const staffmaster = "Staff Master";
 
 // let myWeb = new pnp.Web("http://iconnect.interplex.com");
@@ -141,6 +142,21 @@ class StaffMasterApi {
       .get();
   }
 
+  static async GetEmptyPlantCode(plant){
+    const camlquery = camlBuilder.View().RowLimit(100)
+    .Query().Where().TextField("Plant").EqualTo(plant)
+    .And().TextField("PlantCode").IsNull();
+
+
+    const request:IRenderListDataAsStreamResult = await myWeb.lists
+      .getByTitle(staffmaster)
+          .renderListDataAsStream({
+            ViewXml:`${camlquery.ToString()}`
+        });
+
+    return request.Row;
+  }
+
   static GetActiveStaffByPlantCode(plantcode) {
     const xml = `<View>
         <Query>
@@ -166,6 +182,13 @@ class StaffMasterApi {
       ViewXml: xml
     };
     return myWeb.lists.getByTitle(staffmaster).getItemsByCAMLQuery(camlQuery);
+  }
+
+  static UpdateStaffMaster(id,payload){
+    return myWeb.lists
+    .getByTitle(staffmaster)
+    .items.getById(id)
+    .update(payload);
   }
 
 
