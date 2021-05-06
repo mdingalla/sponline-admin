@@ -25,7 +25,7 @@ export const SupplierMasterVendorCode:React.FunctionComponent = ()=> {
             const url = `https://192.168.65.88/api/supplier/${vendorcode}`;
             fetch(url)
             .then(response => response.json())
-            .then(data => setData(data.vendors));
+            .then(data => setData([data]));
                     }
     }
 
@@ -35,7 +35,7 @@ export const SupplierMasterVendorCode:React.FunctionComponent = ()=> {
 
     const handleFix = async (i)=> {
      try {
-        const supplierCode = i.code;
+        const supplierCode = i.vendorCode;
         var spsSupplier  = null;
         const supplier = await SupplierApi.GetSupplierMasterByVendorCode(supplierCode);
         if(supplier && supplier.length > 0)
@@ -44,8 +44,8 @@ export const SupplierMasterVendorCode:React.FunctionComponent = ()=> {
         }
  
         const payload = {
-            Title:i.name,
-            VendorCode:supplierCode,
+            Title:i.title,
+            VendorCode:i.vendorCode,
             Street:i.street,
             District:i.district,
             WorkCity:i.city,
@@ -55,12 +55,12 @@ export const SupplierMasterVendorCode:React.FunctionComponent = ()=> {
             TelNo:i.telNo,
             Email_692850a1_x002d_35e9_x002d_:i.email,
             Tax:i.tax,
-            Companies:JSON.stringify(i.companies),
-            BankData:JSON.stringify(i.bankData),
-            PurchaseOrg:JSON.stringify(i.purchaseOrg),
-            PostingBlock:i.postingBlock ? JSON.stringify(i.postingBlock) : null,
-            PurchasingBlock:i.purchasingBlock ? JSON.stringify(i.purchasingBlock) : null,
-            DeleteBlock:i.deleteBlock ? JSON.stringify(i.deleteBlock) : null,
+            Companies:i.companies,
+            BankData:i.bankData,
+            PurchaseOrg:i.purchaseOrg,
+            PostingBlock:i.postingBlock,
+            PurchasingBlock:i.purchasingBlock,
+            DeleteBlock:i.deleteBlock,
  
         }
  
@@ -88,8 +88,8 @@ export const SupplierMasterVendorCode:React.FunctionComponent = ()=> {
                 <tbody>
                     {data.map((i)=>{
                         return <tr>
-                            <td>{i.code}</td>
-                            <td>{i.name}</td>
+                            <td>{i.vendorCode}</td>
+                            <td>{i.title}</td>
                             <td>
                             <button className="btn-success" type="button"  onClick={
                                 ()=>{
