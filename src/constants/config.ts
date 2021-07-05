@@ -6,6 +6,7 @@ export const TRAdmin = `${AdminPagePath}/trutil`;
 export const GroupsPagePath = `${AdminPagePath}/spgroups`;
 export const GroupsPath = `${AdminPagePath}/group`;
 export const SignatoryAdminPagePath = `${AdminPagePath}/signatory/:id`;
+export const SupplierUpdateAdminPagePath = `${AdminPagePath}/supplierupdate`;
 export const SharePointOnlineUrl = `https://interplexgroup.sharepoint.com/sites/app`
 export const CerReportpagePath = _spPageContextInfo.webServerRelativeUrl + "/SitePages/CERReport.aspx";
 export const CostCentrePagePath = _spPageContextInfo.webServerRelativeUrl + "Pages/CostCenterMain.aspx";

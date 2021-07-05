@@ -12,7 +12,7 @@ import travelWrapper from '../../components/TravelHOC';
 import '!style-loader!css-loader!./override.css';
 import { TodoItemData } from '../../../types/models';
 import { PettyCashPTCGLItemImport } from '../../components/PettyCash';
-import { GroupsPagePath, SupplierMasterSyncPath, TRAdmin, TRImportPagePath } from '../../constants/config';
+import { GroupsPagePath, SupplierMasterSyncPath, SupplierUpdateAdminPagePath, TRAdmin, TRImportPagePath } from '../../constants/config';
 import { TravelDetailsImport } from '../../components/Travel/import';
 import { TravelAdmin } from '../../components/TRAdmin';
 import GroupsPage from '../../components/Groups';
@@ -63,6 +63,10 @@ export class Dashboard extends React.Component<Dashboard.Props, Dashboard.State>
         case SupplierMasterSyncPath:
           form = <SupplierMasterVendorCode />;
           break;
+
+       case  SupplierUpdateAdminPagePath:
+        form = <SupplierMasterVendorCode />;
+        break;
     
       default:
         form = <PettyCashPTCGLItemImport />;

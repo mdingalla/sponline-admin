@@ -11,6 +11,8 @@ import travelWrapper from "../../components/TravelHOC";
 import { SharePointRestResult } from "../../../types/models";
 import { StaffMasterFix } from "../../components/StaffMaster";
 import {SupplierMasterVendorCode} from "../../components/SupplierMaster";
+import { DatePicker } from "office-ui-fabric-react";
+import { DayPickerStrings } from "../../constants/config";
 // import UploadSupplierOnline from "../../components/SPOnline/uploadSupplier";
 
 export namespace Playground {
@@ -22,6 +24,7 @@ export namespace Playground {
 
   export interface State {
     /* empty */
+    value:any;
   }
 }
 
@@ -39,7 +42,16 @@ export class Playground extends React.Component<
       <div className="col-md-12">
         <div className="row-fluid">
           <div className="col-lg-12">
-            <SupplierMasterVendorCode />
+          <DatePicker strings={DayPickerStrings} 
+                      allowTextInput={ true }
+                      onChange={(e)=>{
+                        this.setState({
+                          value:e
+                        });
+                      }}
+                      value={this.state.value} 
+                      placeholder='Select a date...' />
+            {/* <SupplierMasterVendorCode /> */}
             {/* <PTCGLItemFix /> */}
             {/* <UploadSupplierOnline /> */}
             {/* <TravelAttendanceSync /> */}
