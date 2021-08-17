@@ -135,7 +135,7 @@ export const StaffImport = ()=> {
                  ManagerId:manager !== undefined ?  manager.ManagerUserIDId : null
                };
 
-               await StaffMasterApi.CreateOrUpdate(staff,ID);
+               //await StaffMasterApi.CreateOrUpdate(staff,ID);
 
             return staff;
   
