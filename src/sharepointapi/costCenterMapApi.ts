@@ -1,11 +1,11 @@
 import {sp, RenderListDataOptions, RenderListDataParameters, ContentType, Web, CamlQuery, PagedItemCollection} from '@pnp/sp'
 import _ = require("lodash");
 
-const MAPCC = "MapCC";
+const MAPCC = "MapCCMaster";
 const CCGroup = 'CCGroup';
 const HRCostCentre = 'HRCostCentre'
 
-let myWeb = new Web(_spPageContextInfo.webAbsoluteUrl);
+let myWeb = new Web(_spPageContextInfo.siteAbsoluteUrl);
 sp.setup({
   sp: {
     headers: {
@@ -131,6 +131,13 @@ class CostCenterMapApi {
     static GetActiveCostCenter(){
       return myWeb.lists.getByTitle("ActiveCC")
         .items.getAll();
+    }
+
+    static GetCostCenterByPlant(plantName){
+      return myWeb.lists.getByTitle(MAPCC)
+        .items
+        .filter(`Entity_x0020_Name eq '${plantName}'`)
+        .getAll()
     }
 }
 

@@ -35,6 +35,10 @@ export class Playground extends React.Component<
 > {
   constructor(props) {
     super(props);
+
+    this.state = {
+      value:new Date()
+    }
   }
 
   render() {

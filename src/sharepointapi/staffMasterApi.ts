@@ -9,7 +9,7 @@ const camlBuilder = new CamlBuilder();
 const staffmaster = "Staff Master";
 
 // let myWeb = new pnp.Web("http://iconnect.interplex.com");
-let myWeb = new Web(_spPageContextInfo.webAbsoluteUrl);
+let myWeb = new Web(_spPageContextInfo.siteAbsoluteUrl);
 sp.setup({
   sp: {
     headers: {
@@ -138,6 +138,8 @@ class StaffMasterApi {
     return myWeb.lists
       .getByTitle(staffmaster)
       .items.filter(filter)
+      .expand('WindowsID,Manager')
+      .select("*,WindowsID/EMail,WindowsID/Name,Manager/EMail,Manager/Name")
       .top(2000)
       .get();
   }
@@ -199,6 +201,28 @@ class StaffMasterApi {
         SyncDate:moment().toISOString()
       })
   }
+
+  static GetAll(){
+    return myWeb.lists.getByTitle(staffmaster)
+      .items
+      .expand('WindowsID,Manager')
+      .select("Id,WindowsIDId,Plant,EmpNo,Title,WindowsID/EMail,WindowsID/Name,Manager/EMail,Manager/Name")
+      .getAll(20000)
+  }
+
+  static CreateOrUpdate(payload,id){
+    if(id)
+    {
+      return myWeb.lists.getByTitle(staffmaster)
+        .items.getById(id).update(payload);
+    }
+    else
+    {
+      return myWeb.lists.getByTitle(staffmaster)
+      .items.add(payload);
+    }
+  }
+  
 }
 
 export default StaffMasterApi;

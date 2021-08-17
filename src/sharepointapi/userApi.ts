@@ -1,4 +1,6 @@
-import {sp} from '@pnp/sp'
+import {sp,SPHttpClient} from '@pnp/sp'
+
+const spClient = new SPHttpClient();
 
 sp.setup({
     sp: {
@@ -15,6 +17,27 @@ class UserApi {
       // return sp.web.siteUsers.filter(filter).get();
 
       return sp.web.siteUsers.filter(filter).get();
+  }
+
+  static async ensureUser(login){
+    try {
+      const loginName = `i:0#.f|membership|${login}`
+      const restApi = `${_spPageContextInfo.siteAbsoluteUrl}/_api/web/ensureuser`;
+      const data = await spClient.post(restApi, {
+        body: JSON.stringify({ 'logonName': loginName })
+      });
+
+      if (data.ok) {
+        const user = await data.json();
+        if (user && user.d.Id) {
+          // return user.d.Id;
+          return user;
+        }
+      }
+      return null; 
+    } catch (error) {
+      return null
+    }
   }
 
   static GetUserById(id){

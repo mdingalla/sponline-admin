@@ -10,6 +10,7 @@ export const SupplierUpdateAdminPagePath = `${AdminPagePath}/supplierupdate`;
 export const SharePointOnlineUrl = `https://interplexgroup.sharepoint.com/sites/app`
 export const CerReportpagePath = _spPageContextInfo.webServerRelativeUrl + "/SitePages/CERReport.aspx";
 export const CostCentrePagePath = _spPageContextInfo.webServerRelativeUrl + "Pages/CostCenterMain.aspx";
+export const StaffImportPagePath = `${AdminPagePath}/staffimport`;
 // export const pagePath = _spPageContextInfo.webServerRelativeUrl + "Pages/iconnectutil.aspx";
 export const SPOnlineLegalSite = `https://interplexgroup.sharepoint.com/sites/app`
 export const DayPickerStrings = {
