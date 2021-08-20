@@ -45,6 +45,11 @@ class Utility {
     static SimpleSwal(title="Confirm Delete",titleText="File will be deleted."){
         return MySwal.fire(title,titleText,"info")
     }
+
+
+    static TrimLiterals(str:string){
+        return str.replace(/^\s+|\s+$/gm, '').split('\n').join('')
+    }
 }
 
 export default Utility;

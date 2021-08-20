@@ -1,0 +1,9 @@
+.filedrop {
+    /* height: auto;
+    width: auto; */
+    border-style:none;
+}
+
+.filedropzone {
+   float:left;
+}

@@ -139,6 +139,15 @@ class CostCenterMapApi {
         .filter(`Entity_x0020_Name eq '${plantName}'`)
         .getAll()
     }
+
+
+    static QueryFilter(filter){
+      return myWeb.lists.getByTitle(MAPCC)
+        .items
+        .filter(filter)
+        .top(5000)
+        .get()
+    }
 }
 
 export default CostCenterMapApi;

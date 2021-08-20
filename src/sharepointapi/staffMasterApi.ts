@@ -139,7 +139,17 @@ class StaffMasterApi {
       .getByTitle(staffmaster)
       .items.filter(filter)
       .expand('WindowsID,Manager')
-      .select("*,WindowsID/EMail,WindowsID/Name,Manager/EMail,Manager/Name")
+      .select("*,WindowsID/EMail,WindowsID/Name,WindowsID/Title,Manager/EMail,Manager/Name")
+      .top(2000)
+      .get();
+  }
+
+  static GetStaffFilter(filter) {
+    return myWeb.lists
+      .getByTitle(staffmaster)
+      .items.filter(filter)
+      .expand('WindowsID,Manager')
+      .select("*,WindowsID/EMail,WindowsID/Name,WindowsID/Title,Manager/EMail,Manager/Name")
       .top(2000)
       .get();
   }

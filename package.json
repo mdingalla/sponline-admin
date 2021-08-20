@@ -93,6 +93,7 @@
     "camljs": "^2.11.0",
     "canvas-datagrid": "^0.22.8",
     "classnames": "^2.2.5",
+    "common-tags": "^1.8.0",
     "connected-react-router": "^4.4.1",
     "console-feed": "^2.8.8",
     "currency-symbol-map": "^4.0.4",

@@ -6,7 +6,7 @@ import { RouteComponentProps } from "react-router";
 import { RootState } from "../../reducers";
 
 import travelWrapper from "../../components/TravelHOC";
-
+import {HoDImport} from "../../components/HOD";
 
 import { SharePointRestResult } from "../../../types/models";
 import { StaffMasterFix } from "../../components/StaffMaster";
@@ -42,19 +42,14 @@ export class Playground extends React.Component<
   }
 
   render() {
+
+    const plant = this.props.match.params["id"];
+
     return (
       <div className="col-md-12">
         <div className="row-fluid">
           <div className="col-lg-12">
-          <DatePicker strings={DayPickerStrings} 
-                      allowTextInput={ true }
-                      onChange={(e)=>{
-                        this.setState({
-                          value:e
-                        });
-                      }}
-                      value={this.state.value} 
-                      placeholder='Select a date...' />
+            <HoDImport plant={plant} />
             {/* <SupplierMasterVendorCode /> */}
             {/* <PTCGLItemFix /> */}
             {/* <UploadSupplierOnline /> */}

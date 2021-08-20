@@ -61,12 +61,9 @@ export class Dashboard extends React.Component<Dashboard.Props, Dashboard.State>
         break;
 
         case SupplierMasterSyncPath:
+          case  SupplierUpdateAdminPagePath:
           form = <SupplierMasterVendorCode />;
           break;
-
-       case  SupplierUpdateAdminPagePath:
-        form = <SupplierMasterVendorCode />;
-        break;
 
         case StaffImportPagePath:
           form = <StaffImport />;
