@@ -4,6 +4,8 @@ import {IMXHoDImport} from './imx';
 import {IHILHoDImport} from './ihil';
 import {ExportTable} from './table';
 import { EUHoDimport } from './eu';
+import { AEBHoDImport } from './aeb';
+import { INASHoDImport } from './inas';
 
 export namespace HoDImport {
     export interface Props {
@@ -23,6 +25,9 @@ export const HoDImport:React.FC<HoDImport.Props> = (props)=> {
 
     const loadComponent = ()=> {
         switch (props.plant) {
+            case "AEB":
+                return <AEBHoDImport onImport={(e)=>setData(e)} {...props}  />
+
             case "IMX":
                 return <IMXHoDImport onImport={(e)=>setData(e)} {...props} />
 
@@ -32,6 +37,9 @@ export const HoDImport:React.FC<HoDImport.Props> = (props)=> {
 
             case "EU":
                 return <EUHoDimport onImport={(e)=>setData(e)} {...props} />
+
+            case "INAS":
+                return <INASHoDImport onImport={(e)=>setData(e)} {...props} />
 
             default:
                 return null;
