@@ -1,0 +1,141 @@
+/*
+
+*/
+
+
+/*bootstrap resets for SharePoint*/
+/* *, *:before, *:after {
+    -moz-box-sizing: content-box; 
+    box-sizing: content-box;
+} */
+/* 
+* [class^="span"], * [class^="span"]:before, * [class^="span"]:after {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+} */
+
+#suiteBar *, #suiteBar *:before, #suiteBar *:after {
+    -moz-box-sizing: content-box !important;
+    -webkit-box-sizing: content-box !important;
+    box-sizing: content-box !important
+}
+
+#s4-ribbonrow *, #s4-ribbonrow *:before, #s4-ribbonrow *:after {
+    -moz-box-sizing: content-box !important;
+    box-sizing: content-box !important;
+    -webkit-box-sizing: content-box !important;
+}
+
+img {
+	max-width: none;
+	width: auto;
+}
+
+* [class^="span"] img {
+	max-width: 100%; /*for images inside span grid*/
+}
+
+#scriptWPQ2 img, img.ms-webpart-menuArrowImg, #applist img {
+	width: auto; /*within a span may still need to have width of image not 100% for SP2013 OOTB features/imges*/
+	max-width: none;
+}
+
+.ms-siteactions-imgspan {
+	float: none;
+	margin: 0px;
+}
+
+#s4-ribbonrow [class*="span"] {
+    float: none;
+    margin-left: 0px;
+    line-height: 1.2em;
+}
+
+input.ms-cui-cb-input {
+	height: 14px;
+    padding: 3px 7px 2px;
+}
+
+select, input[type="file"] {
+    height: auto;
+    line-height: 20px;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: 0px;
+}
+
+#contentBox {
+    padding: 1px;
+    margin-left:0px;
+}
+
+#pageContentTitle {
+    display: none;
+}
+
+#suiteBar {
+    display: none !important;
+}
+
+#DeltaPlaceHolderMain > .article.article-body,
+#DeltaPlaceHolderMain > .article.article-body > .article-content {
+    padding: 0;
+    margin: 0;
+}
+
+/* @media (min-width: 1028px)
+{ */
+    #s4-workspace {
+        /* top:18px; */
+        top: 0px;
+    }
+
+    .navbar-fixed-top 
+    {
+        top:0px;
+    }
+
+    .side-nav {
+        top:50px;
+    }
+/* } */
+
+
+    #mainLayout{
+        padding-top:25px;
+    }
+
+
+@media (min-width: 768px){
+    /* #mainLayout{
+        padding-left: 225px;
+        
+    } */
+}
+
+@media (max-width: 1024px)
+{
+    #mainLayout{
+        padding-top:60px;
+    }
+    /* #s4-workspace {
+        top:50px;
+    }
+
+    .navbar-fixed-top 
+    {
+        top:30px;
+    }
+
+    .side-nav {
+        top: 80px;
+    } */
+}
+
+.contentwrapper {
+    margin: 0;
+    min-width: 0;
+}
+/*end bootstrap resets*/

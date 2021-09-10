@@ -16,8 +16,8 @@ const isTest = appconfig.isTest;
 const subfolder = appconfig.folder;
 const appdir = subfolder
 
-var privateconfig = require('./config/private.json');
-const siteUrl = privateconfig.siteUrl;
+
+const siteUrl = isTest ? appconfig.devUrl : appconfig.url;
 
 const outPath = Path.join(__dirname, `./dist/${subfolder}`);
 const sourcePath = Path.join(__dirname, './src');
@@ -45,7 +45,7 @@ module.exports = {
   },
   entry: {
     main:'./admin.tsx',
-    // admin:'./admin.tsx',
+    cer:'./cer.tsx',
     // admin:'admin.tsx',
     vendor: [
       'react',
@@ -177,6 +177,13 @@ module.exports = {
       filename: '[contenthash].css',
       // disable: !isProduction
       disable:true
+    }),
+    new HtmlWebpackPlugin({
+      chunks:["cer","vendor"],
+      minify:false,
+      inject: 'body',
+      template: './template/main.html', //if main
+      filename: 'CER.aspx' //only
     }),
     new HtmlWebpackPlugin({
       chunks:["main","vendor"],

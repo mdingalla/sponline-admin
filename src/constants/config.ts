@@ -96,3 +96,6 @@ export const BootstrapTableOptions = {
   //   text: 'All', value: products.length
   // }] // A numeric array is also available. the purpose of above example is custom the text
 };
+
+//CER Report config
+export const CERReportPagePath = _spPageContextInfo.webServerRelativeUrl + "/Pages/CER.aspx";

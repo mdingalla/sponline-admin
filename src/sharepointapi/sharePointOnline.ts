@@ -2,8 +2,6 @@ import {sp, RenderListDataOptions, RenderListDataParameters, ContentType, Web, C
 import { SharePointOnlineUrl } from '../constants/config'
 
 
-const siteColWeb = new Web(SharePointOnlineUrl)
-
 class SharePointOnlineMaster {
     static Execute(){
         

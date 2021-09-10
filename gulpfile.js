@@ -14,24 +14,25 @@ const subfolder = appconfig.folder;
 
 var addinConfig = require('./config/private.json')
 
-
+var isTest = appconfig.isTest;
 var spusername = config.username;
 var sppassword = config.password;
 var spSiteUrl = 'https://interplexgroup.sharepoint.com/sites/app';
+var spDevSiteUrl = 'https://interplexgroup.sharepoint.com/sites/applications_Dev_Site';
 
 var spRootUrl = 'https://interplexgroup.sharepoint.com/sites/app';
 var spPageFolder = 'Pages';
 
 var spSiteAssetsFolder = `SiteAssets`;
 
-
+const siteUrl = isTest ? spDevSiteUrl : spSiteUrl
 
 gulp.task('up', function () {
 
   gulp.src([`dist/${subfolder}/*.aspx`])
     .pipe(map(function (file, cb) {
       spsave({
-          siteUrl: spSiteUrl,
+          siteUrl: siteUrl,
           checkin: true,
           checkinType: 1,
         }, {
@@ -54,7 +55,7 @@ gulp.task('up', function () {
   gulp.src([`dist/${subfolder}**/*.js`, `dist/${subfolder}**/*.svg`, `dist/${subfolder}**/*.css`, `dist/${subfolder}**/*.html`])
     .pipe(map(function (file, cb) {
       spsave({
-          siteUrl: spSiteUrl,
+          siteUrl: siteUrl,
           checkin: true,
           checkinType: 1
         }, {
