@@ -9,20 +9,10 @@ const url = isTest ? appconfig.relDevUrl :  appconfig.relUrl;
 // const appdir = appconfig.folder;
 const site = isTest ? appconfig.devUrl : appconfig.url;
 
-const murl = `${url}/${appdir}`
+const murl = `${url}/SiteAssets/${appdir}`
 const pnpNode = new PnpNode();
-// const pnpNode = new PnpNode({
-//   config:{
-//     configPath: './config/private.json',
-//   encryptPassword: true,
-//   saveConfigOnDisk: true,
-//   }
-// });
 
 pnpNode.init().then((settings) => {
-  console.log(url);
-  const web = new Web(site)
-
   pnp.setup({
     sp: {
       headers: {
@@ -30,30 +20,16 @@ pnpNode.init().then((settings) => {
       }
     }
   });
-  // const web = new pnp.Web(settings.siteUrl);
-
-  // pnp.setup({
-  //   sp: {
-  //     headers: {
-  //       Accept: 'application/json; odata=verbose'
-  //     }
-  //   }
-  // });
-
+  const web = new pnp.Web(site);
   return web.getFolderByServerRelativeUrl(`${murl}`).files.get().then(files => {
     return files.map((file) => {
       web.getFileByServerRelativeUrl(file.ServerRelativeUrl).delete()
         .then((result) => {
-          console.log(result)
+          console.log('deleting file...',file.ServerRelativeUrl)
         });
     });
-
-  
-  }).then(
-
-  );
-
-
-
-
+  })
+  // .then((result)=>{
+  //   console.log(result)
+  // });
 }).catch(console.log);
