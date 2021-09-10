@@ -44,7 +44,7 @@ module.exports = {
     runtimeChunk: true
   },
   entry: {
-    main:'./admin.tsx',
+    // main:'./admin.tsx',
     cer:'./cer.tsx',
     // admin:'admin.tsx',
     vendor: [
@@ -58,7 +58,7 @@ module.exports = {
       'jquery',
       'bootstrap-loader',
       'bootstrap',
-      'office-ui-fabric-react',
+      // 'office-ui-fabric-react',
       'react-select',
       'canvas-datagrid'
     ],
@@ -182,7 +182,7 @@ module.exports = {
       chunks:["cer","vendor"],
       minify:false,
       inject: 'body',
-      template: './template/main.html', //if main
+      template: './template/cer.html', //if main
       filename: 'CER.aspx' //only
     }),
     new HtmlWebpackPlugin({

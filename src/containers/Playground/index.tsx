@@ -9,10 +9,6 @@ import travelWrapper from "../../components/TravelHOC";
 import {HoDImport} from "../../components/HOD";
 
 import { SharePointRestResult } from "../../../types/models";
-import { StaffMasterFix } from "../../components/StaffMaster";
-import {SupplierMasterVendorCode} from "../../components/SupplierMaster";
-import { DatePicker } from "office-ui-fabric-react";
-import { DayPickerStrings } from "../../constants/config";
 // import UploadSupplierOnline from "../../components/SPOnline/uploadSupplier";
 
 export namespace Playground {

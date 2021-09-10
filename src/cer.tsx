@@ -7,12 +7,12 @@ import { configureStore } from './store';
 import Layout from './containers/Layout/cerReport';
 import AppRoutes from './routes/cer';
 import {ConnectedRouter } from 'react-router-redux';
-import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
+// import { initializeIcons } from "@fluentui/react/lib/Icons";
 
 import '!style-loader!css-loader!./cer.css';
 import '!style-loader!css-loader!./sb-admin.css';
 
-initializeIcons();
+// initializeIcons();
 
 const store = configureStore();
 const history = createBrowserHistory();
