@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form,DatePicker,Layout, Button } from "antd";
+import { Form,DatePicker,Layout, Button, Spin} from "antd";
 import moment = require("moment");
 let alasql = require('alasql');
 import * as XLSX from 'xlsx';
@@ -67,6 +67,7 @@ export const CERReportPage = ()=> {
     const [date,setDate] = React.useState(null);
     const [data,setData] = React.useState([]);
     const [plants,setPlants] =React.useState([]);
+    const [loading,setLoading] = React.useState(false);
 
     React.useEffect(()=>{
         getPlants();
@@ -112,26 +113,38 @@ export const CERReportPage = ()=> {
                 window.location.href = uri + base64(format(template, ctx))
             }
     }
+
+    const getBudgetType = (budget,amount)=> {
+      if(!budget)
+      {
+        if(parseFloat(amount) > 25000 ) return "Type B"
+        return "Type A"
+      }
+      else
+      return budget;
+    }
     
     const onSubmit = async ()=> {
        try {
+        setLoading(true)
         const result = await CerAPI.CERReport(new Date(date[0]),new Date(date[1]));
         const _results = result.map(cer=>{
             const cerItems = cer.CER_TblAssetDtlsMD ? JSON.parse(cer.CER_TblAssetDtlsMD) : [];
 
             const returnItems = cerItems.map((item)=>{
                 const {CER_RefNo,CER_PlantId,CER_ItemStatus,FYEAR,
-                    BudgetType,CER_NameofProject,CER_PurposeofReq,ApproveDate,Created
+                    BudgetType,CER_NameofProject,CER_PurposeofReq,
+                    ApproveDate,Modified,CER_AssetDtlsTotalCalAmnt1
                 } = cer;
                 return {
                     Title:CER_RefNo,
                     Plant:getPlantTitle(CER_PlantId),
                     Status:CER_ItemStatus,
                     FYear:FYEAR,
-                    BudgetType:BudgetType,
+                    BudgetType:getBudgetType(BudgetType,CER_AssetDtlsTotalCalAmnt1),
                     ProjectName:CER_NameofProject,
                     Purpose:CER_PurposeofReq,
-                    ApproveDate:ApproveDate ? moment(ApproveDate).format("DD-MM-YYYY") : null,
+                    ApproveDate:ApproveDate ? moment(ApproveDate).format("DD-MM-YYYY") : moment(Modified).format("DD-MM-YYYY"),
                     ...item
                 }
 
@@ -141,10 +154,12 @@ export const CERReportPage = ()=> {
         });
         
         setData(_.flatten(_results));
+        setLoading(false)
         // console.log(_.flatten(_results));
        
        } catch (error) {
             console.log('error',error);
+            setLoading(false)
        }
 
     }
@@ -159,6 +174,9 @@ export const CERReportPage = ()=> {
         <h4 className={style.header}>CER Report</h4>
     </Header>
     <Content>
+      {loading && <div className={style.spincontainer}>
+        <Spin size="large"  />
+        </div>}
     <Form
       name="basic"
       labelCol={{ span: 8 }}
