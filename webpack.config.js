@@ -44,7 +44,7 @@ module.exports = {
     runtimeChunk: true
   },
   entry: {
-    // main:'./admin.tsx',
+    main:'./admin.tsx',
     cer:'./cer.tsx',
     // admin:'admin.tsx',
     vendor: [

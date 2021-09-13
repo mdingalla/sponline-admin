@@ -2,16 +2,16 @@ import {sp, RenderListDataOptions, RenderListDataParameters, ContentType, Web, C
 import { SPCostCenterRequest } from '../../types/models';
 
 import { stat } from "fs";
-import { IPersonaProps } from "office-ui-fabric-react/lib/Persona";
+import { IPersonaProps } from "@fluentui/react";
 const ALL = "ALL";
 const CER = "CER";
 const ADT = "AssetDisposal";
 const CERAsset = "CERAssets";
 const AssetClass = "AssetClass";
 const CERApprovalMatrixtable = "CER-ApprovalMatrix";
-let url = window.location.protocol + "//iconnect.interplex.com/CER";
-let myWeb = new Web(url);
-// let myWeb = new pnp.Web(_spPageContextInfo.webAbsoluteUrl);
+// let url = window.location.protocol + "//iconnect.interplex.com/CER";
+
+let myWeb = new Web(`${_spPageContextInfo.siteAbsoluteUrl}/CER`);
 sp.setup({
   sp: {
     headers: {
@@ -197,6 +197,14 @@ class CerAPI {
   static UpdateCER(cerid,payload){
     myWeb.lists.getByTitle(CER)
       .items.getById(cerid).update(payload)
+  }
+
+  //new cer
+  static CERReport(dateFrom:Date,dateTo:Date){
+      return myWeb.lists.getByTitle(CER)
+        .items
+        .filter(`Created ge datetime'${dateFrom.toISOString()}' and Created le datetime'${dateTo.toISOString()}'`)
+        .getAll(5000)
   }
 }
 
