@@ -10,44 +10,59 @@ import * as style from './style.css';
 alasql.utils.isBrowserify = false;
 alasql.utils.global.XLSX = XLSX;
 
-const columns = [{
+const columns = [
+  {
+    dataField: 'Plant',
+    text: 'Plant'
+  },
+  {
+    dataField: 'FYear',
+    text: 'FYear'
+  }, 
+  {
   dataField: 'Title',
   text: 'Title'
-}, {
-  dataField: 'Plant',
-  text: 'Plant'
-},  {
-  dataField: 'Description',
-  text: 'Description'
-}, {
-  dataField: 'TotalQuotedAmnt1',
-  text: 'TotalAmount'
-}, {
-  dataField: 'UnitPrice',
-  text: 'UnitPrice'
-}, {
-  dataField: 'SelAssetCat',
-  text: 'AssetCategory'
-}, {
+},
+{
   dataField: 'Status',
   text: 'Status'
-}, {
-  dataField: 'FYear',
-  text: 'FYear'
-}, {
+},
+ {
   dataField: 'BudgetType',
   text: 'BudgetType'
-}, {
-  dataField: 'ProjectName',
-  text: 'Project'
-},{
+},
+{
+  dataField: 'AssetCategory',
+  text: 'AssetCategory'
+},
+ {
+  dataField: 'Description',
+  text: 'Description'
+},
+{
   
   dataField: 'Purpose',
   text: 'Purpose'
 }, 
 {
+  dataField: 'CERAMount',
+  text: 'CER AMount'
+},
+ {
+  dataField: 'TotalQuotedAmnt',
+  text: 'TotalQuoted'
+}, 
+{
+  dataField: 'ProjectName',
+  text: 'Project'
+},
+{
   dataField: 'ApproveDate',
   text: 'Final Approve Date'
+},
+{
+  dataField: 'Created',
+  text: 'Created'
 }
 ];
 
@@ -90,9 +105,8 @@ export const CERReportPage = ()=> {
     }
 
     const handleALAExcelExport =() => {
-        alasql("SELECT Title,Plant,Description,UnitPrice," 
-        + "TotalQuotedAmnt1,SelAssetCat,Status,FYear,BudgetType,"
-        + "ProjectName,Purpose,ApproveDate " 
+        alasql("SELECT Plant,FYear,Title,Status,BudgetType,AssetCategory," 
+        + "Description,Purpose,CERAMount,TotalQuotedAmnt,ProjectName,ApproveDate,Created " 
         + "INTO XLSX('CERReport.xlsx',{headers:true}) FROM ? ",[data]);
     }
 
@@ -132,7 +146,8 @@ export const CERReportPage = ()=> {
             const cerItems = cer.CER_TblAssetDtlsMD ? JSON.parse(cer.CER_TblAssetDtlsMD) : [];
 
             const returnItems = cerItems.map((item)=>{
-                const {CER_RefNo,CER_PlantId,CER_ItemStatus,FYEAR,
+                const {CER_RefNo,CER_PlantId,Created,
+                  CER_ItemStatus,FYEAR,
                     BudgetType,CER_NameofProject,CER_PurposeofReq,
                     ApproveDate,Modified,CER_AssetDtlsTotalCalAmnt1
                 } = cer;
@@ -144,7 +159,12 @@ export const CERReportPage = ()=> {
                     BudgetType:getBudgetType(BudgetType,CER_AssetDtlsTotalCalAmnt1),
                     ProjectName:CER_NameofProject,
                     Purpose:CER_PurposeofReq,
-                    ApproveDate:ApproveDate ? moment(ApproveDate).format("DD-MM-YYYY") : moment(Modified).format("DD-MM-YYYY"),
+                    ApproveDate:ApproveDate ? moment(ApproveDate).format("DD-MM-YYYY")
+                     : moment(Modified).format("DD-MM-YYYY"),
+                     CERAMount:CER_AssetDtlsTotalCalAmnt1,
+                     Created:moment(Created).format("DD-MM-YYYY"),
+                     AssetCategory:item.SelAssetCat,
+                     TotalQuotedAmnt:item.TotalQuotedAmnt1,
                     ...item
                 }
 
@@ -234,6 +254,7 @@ const ExcelTable = ({cerData}) => {
             <td>{item[columns[9].dataField]}</td>
             <td>{item[columns[10].dataField]}</td>
             <td>{item[columns[11].dataField]}</td>
+            <td>{item[columns[12].dataField]}</td>
           </tr>
         })}
         </tbody>
