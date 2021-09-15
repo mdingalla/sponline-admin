@@ -156,7 +156,7 @@ export const CERReportPage = ()=> {
                     Plant:getPlantTitle(CER_PlantId),
                     Status:CER_ItemStatus,
                     FYear:FYEAR,
-                    BudgetType:getBudgetType(BudgetType,CER_AssetDtlsTotalCalAmnt1),
+                    BudgetType:getBudgetType(BudgetType,CER_AssetDtlsTotalCalAmnt2),
                     ProjectName:CER_NameofProject,
                     Purpose:CER_PurposeofReq,
                     ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApproveDate ? moment(ApproveDate).format("DD-MM-YYYY")
