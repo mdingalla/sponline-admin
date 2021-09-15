@@ -149,7 +149,7 @@ export const CERReportPage = ()=> {
                 const {CER_RefNo,CER_PlantId,Created,
                   CER_ItemStatus,FYEAR,
                     BudgetType,CER_NameofProject,CER_PurposeofReq,
-                    ApproveDate,Modified,CER_AssetDtlsTotalCalAmnt1
+                    ApproveDate,Modified,CER_AssetDtlsTotalCalAmnt1,CER_AssetDtlsTotalCalAmnt2
                 } = cer;
                 return {
                     Title:CER_RefNo,
@@ -159,12 +159,12 @@ export const CERReportPage = ()=> {
                     BudgetType:getBudgetType(BudgetType,CER_AssetDtlsTotalCalAmnt1),
                     ProjectName:CER_NameofProject,
                     Purpose:CER_PurposeofReq,
-                    ApproveDate:ApproveDate ? moment(ApproveDate).format("DD-MM-YYYY")
-                     : moment(Modified).format("DD-MM-YYYY"),
-                     CERAMount:CER_AssetDtlsTotalCalAmnt1,
+                    ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApproveDate ? moment(ApproveDate).format("DD-MM-YYYY")
+                     : moment(Modified).format("DD-MM-YYYY")) : "",
+                     CERAMount:CER_AssetDtlsTotalCalAmnt2,
                      Created:moment(Created).format("DD-MM-YYYY"),
                      AssetCategory:item.SelAssetCat,
-                     TotalQuotedAmnt:item.TotalQuotedAmnt1,
+                     TotalQuotedAmnt:item.TotalQuotedAmnt2,
                     ...item
                 }
 
