@@ -128,11 +128,24 @@ export const CERReportPage = ()=> {
             }
     }
 
-    const getBudgetType = (budget,amount)=> {
+    const getBudgetType = (assetclass,budget,amount)=> {
       if(!budget)
       {
-        if(parseFloat(amount) > 25000 ) return "Type B"
-        return "Type A"
+        const IT_ASSETCLASS = ['4000-Computer Hardware',
+      '4000-Computer Hardware: Others','4000-Dell PC/Laptop PreApproved Models',
+    '4000-Printers, Barcode, Copiers','4500-Computer Software','4500-Computer Sofware']
+
+        if(IT_ASSETCLASS.indexOf(assetclass) >= 0)
+        {
+          return "IT";
+        }
+        else
+        {
+          if(parseFloat(amount) > 25000 ) return "Type B"
+          return "Type A"
+        }
+
+        
       }
       else
       return budget;
@@ -156,7 +169,7 @@ export const CERReportPage = ()=> {
                     Plant:getPlantTitle(CER_PlantId),
                     Status:CER_ItemStatus,
                     FYear:FYEAR,
-                    BudgetType:getBudgetType(BudgetType,CER_AssetDtlsTotalCalAmnt1),
+                    BudgetType:getBudgetType(item.SelAssetCat,BudgetType,CER_AssetDtlsTotalCalAmnt1),
                     ProjectName:CER_NameofProject,
                     Purpose:CER_PurposeofReq,
                     ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApproveDate ? moment(ApproveDate).format("DD-MM-YYYY")
