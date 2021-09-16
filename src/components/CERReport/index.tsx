@@ -172,10 +172,10 @@ export const CERReportPage = ()=> {
                     BudgetType:getBudgetType(item.SelAssetCat,BudgetType,CER_AssetDtlsTotalCalAmnt1),
                     ProjectName:CER_NameofProject,
                     Purpose:CER_PurposeofReq,
-                    ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApproveDate ? moment(ApproveDate).format("DD-MM-YYYY")
-                     : moment(Modified).format("DD-MM-YYYY")) : "",
+                    ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApproveDate ? moment(ApproveDate).utc().format("DD-MM-YYYY")
+                     : moment(Modified).utc().format("DD-MM-YYYY")) : "",
                      CERAMount:CER_AssetDtlsTotalCalAmnt2,
-                     Created:moment(Created).format("DD-MM-YYYY"),
+                     Created:moment(Created).utc().format("DD-MM-YYYY"),
                      AssetCategory:item.SelAssetCat,
                      TotalQuotedAmnt:item.TotalQuotedAmnt2,
                     ...item
