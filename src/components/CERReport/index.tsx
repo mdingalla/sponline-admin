@@ -20,8 +20,8 @@ const columns = [
     text: 'FYear'
   }, 
   {
-  dataField: 'Title',
-  text: 'Title'
+  dataField: 'CER',
+  text: 'CER Reference'
 },
 {
   dataField: 'Status',
@@ -105,7 +105,7 @@ export const CERReportPage = ()=> {
     }
 
     const handleALAExcelExport =() => {
-        alasql("SELECT Plant,FYear,Title,Status,BudgetType,AssetCategory," 
+        alasql("SELECT Plant,FYear,CER,Status,BudgetType,AssetCategory," 
         + "Description,Purpose,CERAMount,TotalQuotedAmnt,ProjectName,ApproveDate,Created " 
         + "INTO XLSX('CERReport.xlsx',{headers:true}) FROM ? ",[data]);
     }
@@ -165,11 +165,11 @@ export const CERReportPage = ()=> {
                     ApproveDate,Modified,CER_AssetDtlsTotalCalAmnt1,CER_AssetDtlsTotalCalAmnt2
                 } = cer;
                 return {
-                    Title:CER_RefNo,
+                    CER:CER_RefNo,
                     Plant:getPlantTitle(CER_PlantId),
                     Status:CER_ItemStatus,
                     FYear:FYEAR,
-                    BudgetType:getBudgetType(item.SelAssetCat,BudgetType,CER_AssetDtlsTotalCalAmnt1),
+                    BudgetType:getBudgetType(item.SelAssetCat,item.BudgetType,CER_AssetDtlsTotalCalAmnt1),
                     ProjectName:CER_NameofProject,
                     Purpose:CER_PurposeofReq,
                     ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApproveDate ? moment(ApproveDate).utc().format("DD-MM-YYYY")
