@@ -32,6 +32,10 @@ const columns = [
   text: 'BudgetType'
 },
 {
+  dataField:'BudgetIdNo',
+  text:'BudgetIdNo'
+},
+{
   dataField: 'AssetCategory',
   text: 'AssetCategory'
 },
@@ -48,6 +52,14 @@ const columns = [
   dataField: 'CERAMount',
   text: 'CER AMount'
 },
+{
+  dataField: 'ProjectROI',
+  text: 'ProjectROI'
+},
+{
+  dataField: 'ProjectNPV',
+  text: 'ProjectNPV'
+},
  {
   dataField: 'TotalQuotedAmnt',
   text: 'TotalQuoted'
@@ -59,6 +71,14 @@ const columns = [
 {
   dataField: 'ApproveDate',
   text: 'Final Approve Date'
+},
+{
+  dataField: 'IsSupplemental',
+  text: 'Supplemental'
+},
+{
+  dataField: 'SupplementalNo',
+  text: 'SupplementalNo'
 },
 {
   dataField: 'Created',
@@ -105,8 +125,9 @@ export const CERReportPage = ()=> {
     }
 
     const handleALAExcelExport =() => {
-        alasql("SELECT Plant,FYear,CER,Status,BudgetType,AssetCategory," 
-        + "Description,Purpose,CERAMount,TotalQuotedAmnt,ProjectName,ApproveDate,Created " 
+        alasql("SELECT Plant,FYear,CER,Status,BudgetType,BudgetIdNo,AssetCategory," 
+        + "Description,Purpose,CERAMount,ProjectROI,ProjectNPV,"
+        + "TotalQuotedAmnt,ProjectName,ApproveDate,IsSupplemental,SupplementalNo,Created " 
         + "INTO XLSX('CERReport.xlsx',{headers:true}) FROM ? ",[data]);
     }
 
@@ -161,6 +182,7 @@ export const CERReportPage = ()=> {
             const returnItems = cerItems.map((item)=>{
                 const {CER_RefNo,CER_PlantId,Created,
                   CER_ItemStatus,FYEAR,
+                    ProjectNPV,ProjectROI,CER_Supplemental_Ref,IsSupplemental,
                     BudgetType,CER_NameofProject,CER_PurposeofReq,
                     ApproveDate,Modified,CER_AssetDtlsTotalCalAmnt1,CER_AssetDtlsTotalCalAmnt2
                 } = cer;
@@ -178,17 +200,22 @@ export const CERReportPage = ()=> {
                      Created:moment(Created).utc().format("DD-MM-YYYY"),
                      AssetCategory:item.SelAssetCat,
                      TotalQuotedAmnt:item.TotalQuotedAmnt2,
+                     ProjectNPV:ProjectNPV || "",
+                     ProjectROI:ProjectROI || "",
+                     SupplementalNo:CER_Supplemental_Ref || "",
+                     IsSupplemental:IsSupplemental  ? "Yes":"No",
+                     BudgetIdNo:item.BudgetIndex,
                     ...item
                 }
 
             })
-
+            
             return returnItems;
         });
-        
-        setData(_.flatten(_results));
+        const allItems = _.flatten(_results);
+        setData(allItems);
         setLoading(false)
-        // console.log(_.flatten(_results));
+        console.log('allItems',allItems);
        
        } catch (error) {
             console.log('error',error);
@@ -255,8 +282,13 @@ const ExcelTable = ({cerData}) => {
         <tbody>
         {cerData.map((item,idx) => {
           return <tr key={idx}>
-            <td>{item[columns[0].dataField]}</td>
-            <td>{item[columns[1].dataField]}</td>
+            {
+              columns.map((i,idx)=>{
+                return <td>{item[columns[idx].dataField]}</td>
+              })
+            }
+            
+            {/* <td>{item[columns[1].dataField]}</td>
             <td>{item[columns[2].dataField]}</td>
             <td>{item[columns[3].dataField]}</td>
             <td>{item[columns[4].dataField]}</td>
@@ -267,7 +299,7 @@ const ExcelTable = ({cerData}) => {
             <td>{item[columns[9].dataField]}</td>
             <td>{item[columns[10].dataField]}</td>
             <td>{item[columns[11].dataField]}</td>
-            <td>{item[columns[12].dataField]}</td>
+            <td>{item[columns[12].dataField]}</td> */}
           </tr>
         })}
         </tbody>
