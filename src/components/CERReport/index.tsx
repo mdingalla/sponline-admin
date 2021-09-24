@@ -53,8 +53,8 @@ const columns = [
   text: 'CER AMount'
 },
 {
-  dataField: 'ProjectROI',
-  text: 'ProjectROI'
+  dataField: 'Proj ROI/ Payback (Yrs)',
+  text: 'Proj ROI/ Payback (Yrs)'
 },
 {
   dataField: 'ProjectNPV',
@@ -126,7 +126,7 @@ export const CERReportPage = ()=> {
 
     const handleALAExcelExport =() => {
         alasql("SELECT Plant,FYear,CER,Status,BudgetType,BudgetIdNo,AssetCategory," 
-        + "Description,Purpose,CERAMount,ProjectROI,ProjectNPV,"
+        + "Description,Purpose,CERAMount,[Proj ROI/ Payback (Yrs)],ProjectNPV,"
         + "TotalQuotedAmnt,ProjectName,ApproveDate,IsSupplemental,SupplementalNo,Created " 
         + "INTO XLSX('CERReport.xlsx',{headers:true}) FROM ? ",[data]);
     }
@@ -169,7 +169,14 @@ export const CERReportPage = ()=> {
         
       }
       else
-      return budget;
+      return budget == "--Select--" ? "" : budget;
+    }
+
+    const filterDropdownValue = (value)=> {
+      if(value){
+        return value == "--Select--" ? "" : value;
+      }
+      return ""
     }
     
     const onSubmit = async ()=> {
@@ -198,13 +205,14 @@ export const CERReportPage = ()=> {
                      : moment(Modified).utc().format("DD-MM-YYYY")) : "",
                      CERAMount:CER_AssetDtlsTotalCalAmnt2,
                      Created:moment(Created).utc().format("DD-MM-YYYY"),
-                     AssetCategory:item.SelAssetCat,
+                     AssetCategory:filterDropdownValue(item.SelAssetCat),
                      TotalQuotedAmnt:item.TotalQuotedAmnt2,
                      ProjectNPV:ProjectNPV || "",
                      ProjectROI:ProjectROI || "",
                      SupplementalNo:CER_Supplemental_Ref || "",
                      IsSupplemental:IsSupplemental  ? "Yes":"No",
                      BudgetIdNo:item.BudgetIndex,
+                     'Proj ROI/ Payback (Yrs)':ProjectROI || "",
                     ...item
                 }
 
