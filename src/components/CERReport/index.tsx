@@ -183,7 +183,16 @@ export const CERReportPage = ()=> {
        try {
         setLoading(true)
         const result = await CerAPI.CERReport(new Date(date[0]),new Date(date[1]));
-        const _results = result.map(cer=>{
+        const _results = result.filter(x=>{
+          const _created = moment(x.Created);
+          const _differenceMonth = moment().diff(_created,'months',true);
+          if(_differenceMonth > 6)
+          {
+            return x.CER_ItemStatus == "APPROVED";
+          }
+          return true;  
+          // return _differenceMonth > 6 && x.CER_ItemStatus.toUpperCase() != "APPROVED";
+        }).map(cer=>{
             const cerItems = cer.CER_TblAssetDtlsMD ? JSON.parse(cer.CER_TblAssetDtlsMD) : [];
 
             const returnItems = cerItems.map((item)=>{
