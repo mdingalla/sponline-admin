@@ -168,7 +168,7 @@ export const CERReportPage = ()=> {
 
         
       }
-      else
+      
       return budget == "--Select--" ? "" : budget;
     }
 
@@ -207,7 +207,7 @@ export const CERReportPage = ()=> {
                     Plant:getPlantTitle(CER_PlantId),
                     Status:CER_ItemStatus,
                     FYear:FYEAR,
-                    BudgetType:getBudgetType(item.SelAssetCat,item.BudgetType,CER_AssetDtlsTotalCalAmnt1),
+                    BudgetType:getBudgetType(item.SelAssetCat,item.BudgetType,CER_AssetDtlsTotalCalAmnt2),
                     ProjectName:CER_NameofProject,
                     Purpose:CER_PurposeofReq,
                     ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApproveDate ? moment(ApproveDate).utc().format("DD-MM-YYYY")
