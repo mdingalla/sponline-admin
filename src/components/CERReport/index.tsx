@@ -124,6 +124,10 @@ export const CERReportPage = ()=> {
         return ""
     }
 
+    function parseAmount(amt){
+      return parseFloat(amt.toString().replace(/,/g,''))
+    }
+
     const handleALAExcelExport =() => {
         alasql("SELECT Plant,FYear,CER,Status,BudgetType,BudgetIdNo,AssetCategory," 
         + "Description,Purpose,CERAMount,[Proj ROI/ Payback (Yrs)],ProjectNPV,"
@@ -193,15 +197,20 @@ export const CERReportPage = ()=> {
           return true;  
           // return _differenceMonth > 6 && x.CER_ItemStatus.toUpperCase() != "APPROVED";
         }).map(cer=>{
-            const cerItems = cer.CER_TblAssetDtlsMD ? JSON.parse(cer.CER_TblAssetDtlsMD) : [];
+            const cerItems:any[] = cer.CER_TblAssetDtlsMD ? JSON.parse(cer.CER_TblAssetDtlsMD) : [];
 
             const returnItems = cerItems.map((item)=>{
                 const {CER_RefNo,CER_PlantId,Created,
                   CER_ItemStatus,FYEAR,
                     ProjectNPV,ProjectROI,CER_Supplemental_Ref,IsSupplemental,
                     BudgetType,CER_NameofProject,CER_PurposeofReq,
-                    ApproveDate,Modified,CER_AssetDtlsTotalCalAmnt1,CER_AssetDtlsTotalCalAmnt2
+                    ApproveDate,Modified,
                 } = cer;
+
+                const CER_AssetDtlsTotalCalAmnt2 = cerItems.reduce((prev,curr)=>{
+                  return prev += parseAmount(curr.TotalQuotedAmnt2)
+                },0);
+
                 return {
                     CER:CER_RefNo,
                     Plant:getPlantTitle(CER_PlantId),
