@@ -189,8 +189,10 @@ export const CERReportPage = ()=> {
         if(parseFloat(amount) > 25000 ) return "Type B"
         return "Type A"
       }
-      
-      // return budget == "--Select--" || budget == "null" ? "" : budget;
+      else
+      {
+        return budget == "--Select--" || budget == "null" ? "" : budget;
+      }
     }
 
     const filterDropdownValue = (value)=> {
