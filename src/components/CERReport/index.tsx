@@ -83,6 +83,10 @@ const columns = [
 {
   dataField: 'Created',
   text: 'Created'
+},
+{
+  dataField: 'AnnualBudget',
+  text: 'AnnualBudget'
 }
 ];
 
@@ -124,6 +128,12 @@ export const CERReportPage = ()=> {
         return ""
     }
 
+    const getPlant = (id)=> {
+      const plant = plants.find(x=>x.Id == id);
+      if(plant) return plant;
+      return null
+  }
+
     function parseAmount(amt){
       return parseFloat(amt.toString().replace(/,/g,''))
     }
@@ -131,7 +141,7 @@ export const CERReportPage = ()=> {
     const handleALAExcelExport =() => {
         alasql("SELECT Plant,FYear,CER,Status,BudgetType,BudgetIdNo,AssetCategory," 
         + "Description,Purpose,CERAMount,[Proj ROI/ Payback (Yrs)],ProjectNPV,"
-        + "TotalQuotedAmnt,ProjectName,ApproveDate,IsSupplemental,SupplementalNo,Created " 
+        + "TotalQuotedAmnt,ProjectName,ApproveDate,IsSupplemental,SupplementalNo,Created,AnnualBudget " 
         + "INTO XLSX('CERReport.xlsx',{headers:true}) FROM ? ",[data]);
     }
 
@@ -169,11 +179,13 @@ export const CERReportPage = ()=> {
           if(parseFloat(amount) > 25000 ) return "Type B"
           return "Type A"
         }
-
-        
+      }
+      else if(budget == "--Select--" || budget == "null"){
+        if(parseFloat(amount) > 25000 ) return "Type B"
+        return "Type A"
       }
       
-      return budget == "--Select--" ? "" : budget;
+      // return budget == "--Select--" || budget == "null" ? "" : budget;
     }
 
     const filterDropdownValue = (value)=> {
@@ -187,6 +199,9 @@ export const CERReportPage = ()=> {
        try {
         setLoading(true)
         const result = await CerAPI.CERReport(new Date(date[0]),new Date(date[1]));
+        const annualBudget = await CerAPI.GetAnnualBudget();
+
+
         const _results = result.filter(x=>{
           const _created = moment(x.Created);
           const _differenceMonth = moment().diff(_created,'months',true);
@@ -211,12 +226,20 @@ export const CERReportPage = ()=> {
                   return prev += parseAmount(curr.TotalQuotedAmnt2)
                 },0);
 
+                const _mplant = getPlantTitle(CER_PlantId);
+
+                const _annualBudget = annualBudget.find(x=>x.Title == _mplant);
+
+                const _myAnnualbudget = _annualBudget &&  _annualBudget.ApprovedBudget ? _annualBudget.ApprovedBudget : 0;
+
+                const _budgetType = getBudgetType(item.SelAssetCat,item.BudgetType,CER_AssetDtlsTotalCalAmnt2);
+                
                 return {
                     CER:CER_RefNo,
-                    Plant:getPlantTitle(CER_PlantId),
+                    Plant:_mplant,
                     Status:CER_ItemStatus,
                     FYear:FYEAR,
-                    BudgetType:getBudgetType(item.SelAssetCat,item.BudgetType,CER_AssetDtlsTotalCalAmnt2),
+                    BudgetType:_budgetType,
                     ProjectName:CER_NameofProject,
                     Purpose:CER_PurposeofReq,
                     ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApproveDate ? moment(ApproveDate).utc().format("DD-MM-YYYY")
@@ -229,9 +252,10 @@ export const CERReportPage = ()=> {
                      ProjectROI:ProjectROI || "",
                      SupplementalNo:CER_Supplemental_Ref || "",
                      IsSupplemental:IsSupplemental  ? "Yes":"No",
-                     BudgetIdNo:item.BudgetIndex,
+                     BudgetIdNo:item.BudgetIndex || "",
                      'Proj ROI/ Payback (Yrs)':ProjectROI || "",
-                    ...item
+                    ...item,
+                    AnnualBudget:_myAnnualbudget,
                 }
 
             })

@@ -206,6 +206,12 @@ class CerAPI {
         .filter(`Created ge datetime'${dateFrom.toISOString()}' and Created le datetime'${dateTo.toISOString()}'`)
         .getAll(5000)
   }
+
+  static GetAnnualBudget(){
+    return myWeb.lists.getByTitle("AnnualBudget")
+      .items
+      .getAll(5000)
+}
 }
 
 export default CerAPI;

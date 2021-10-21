@@ -12,7 +12,7 @@ var isTest = appconfig.isTest;
 const subfolder = appconfig.folder;
 
 
-var addinConfig = require('./config/private.json')
+// var addinConfig = require('./config/private.json')
 
 var isTest = appconfig.isTest;
 var spusername = config.username;
