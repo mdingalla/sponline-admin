@@ -199,11 +199,14 @@ class CerAPI {
       .items.getById(cerid).update(payload)
   }
 
+  
+
   //new cer
   static CERReport(dateFrom:Date,dateTo:Date){
       return myWeb.lists.getByTitle(CER)
         .items
         .filter(`Created ge datetime'${dateFrom.toISOString()}' and Created le datetime'${dateTo.toISOString()}'`)
+        .expand()
         .getAll(5000)
   }
 

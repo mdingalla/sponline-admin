@@ -87,6 +87,10 @@ const columns = [
 {
   dataField: 'AnnualBudget',
   text: 'AnnualBudget'
+},
+{
+  dataField: 'CostCentre',
+  text: 'CostCentre'
 }
 ];
 
@@ -101,6 +105,7 @@ import '!style-loader!css-loader!antd/dist/antd.css';
 import CerAPI from '../../sharepointapi/cerApi';
 import PlantMaster from '../../sharepointapi/plantMasterApi';
 import * as _ from 'lodash';
+import SiteCollectionApi from '../../sharepointapi/siteCollection';
 export const CERReportPage = ()=> {
 
     const [date,setDate] = React.useState(null);
@@ -141,7 +146,7 @@ export const CERReportPage = ()=> {
     const handleALAExcelExport =() => {
         alasql("SELECT Plant,FYear,CER,Status,BudgetType,BudgetIdNo,AssetCategory," 
         + "Description,Purpose,CERAMount,[Proj ROI/ Payback (Yrs)],ProjectNPV,"
-        + "TotalQuotedAmnt,ProjectName,ApproveDate,IsSupplemental,SupplementalNo,Created,AnnualBudget " 
+        + "TotalQuotedAmnt,ProjectName,ApproveDate,IsSupplemental,SupplementalNo,Created,AnnualBudget,CostCentre " 
         + "INTO XLSX('CERReport.xlsx',{headers:true}) FROM ? ",[data]);
     }
 
@@ -197,75 +202,99 @@ export const CERReportPage = ()=> {
     
     const onSubmit = async ()=> {
        try {
-        setLoading(true)
-        const result = await CerAPI.CERReport(new Date(date[0]),new Date(date[1]));
-        const annualBudget = await CerAPI.GetAnnualBudget();
+          setLoading(true);
 
+          const deptCostCentres = await SiteCollectionApi.GetDeptCostCenter();
+          const mapCCMaster = await SiteCollectionApi.GetMapCCMaster();
 
-        const _results = result.filter(x=>{
+          const result = await CerAPI.CERReport(new Date(date[0]),new Date(date[1]));
+          const annualBudget = await CerAPI.GetAnnualBudget();
+
+          const _results = result.filter(x=>{
           const _created = moment(x.Created);
           const _differenceMonth = moment().diff(_created,'months',true);
-          if(_differenceMonth > 6)
-          {
-            return x.CER_ItemStatus == "APPROVED";
-          }
-          return true;  
-          // return _differenceMonth > 6 && x.CER_ItemStatus.toUpperCase() != "APPROVED";
-        }).map(cer=>{
-            const cerItems:any[] = cer.CER_TblAssetDtlsMD ? JSON.parse(cer.CER_TblAssetDtlsMD) : [];
 
-            const returnItems = cerItems.map((item)=>{
-                const {CER_RefNo,CER_PlantId,Created,
-                  CER_ItemStatus,FYEAR,
-                    ProjectNPV,ProjectROI,CER_Supplemental_Ref,IsSupplemental,
-                    BudgetType,CER_NameofProject,CER_PurposeofReq,
-                    ApproveDate,Modified,
-                } = cer;
+          
 
-                const CER_AssetDtlsTotalCalAmnt2 = cerItems.reduce((prev,curr)=>{
-                  return prev += parseAmount(curr.TotalQuotedAmnt2)
-                },0);
+            if(_differenceMonth > 6)
+            {
+              return x.CER_ItemStatus == "APPROVED";
+            }
+            return true;  
+            // return _differenceMonth > 6 && x.CER_ItemStatus.toUpperCase() != "APPROVED";
+            }).map(cer=>{
+                const cerItems:any[] = cer.CER_TblAssetDtlsMD ? JSON.parse(cer.CER_TblAssetDtlsMD) : [];
 
-                const _mplant = getPlantTitle(CER_PlantId);
-
-                const _annualBudget = annualBudget.find(x=>x.Title == _mplant);
-
-                const _myAnnualbudget = _annualBudget &&  _annualBudget.ApprovedBudget ? _annualBudget.ApprovedBudget : 0;
-
-                const _budgetType = getBudgetType(item.SelAssetCat,item.BudgetType,CER_AssetDtlsTotalCalAmnt2);
-                
-                return {
-                    CER:CER_RefNo,
-                    Plant:_mplant,
-                    Status:CER_ItemStatus,
-                    FYear:FYEAR,
-                    BudgetType:_budgetType,
-                    ProjectName:CER_NameofProject,
-                    Purpose:CER_PurposeofReq,
-                    ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApproveDate ? moment(ApproveDate).utc().format("DD-MM-YYYY")
-                     : moment(Modified).utc().format("DD-MM-YYYY")) : "",
-                     CERAMount:CER_AssetDtlsTotalCalAmnt2,
-                     Created:moment(Created).utc().format("DD-MM-YYYY"),
-                     AssetCategory:filterDropdownValue(item.SelAssetCat),
-                     TotalQuotedAmnt:item.TotalQuotedAmnt2,
-                     ProjectNPV:ProjectNPV || "",
-                     ProjectROI:ProjectROI || "",
-                     SupplementalNo:CER_Supplemental_Ref || "",
-                     IsSupplemental:IsSupplemental  ? "Yes":"No",
-                     BudgetIdNo:item.BudgetIndex || "",
-                     'Proj ROI/ Payback (Yrs)':ProjectROI || "",
-                    ...item,
-                    AnnualBudget:_myAnnualbudget,
+                const getMapCCMaster = (deptCostCentre)=> {
+                  const costcentre = mapCCMaster.map(x=> {
+                    return {
+                      ...x,
+                      DeptCost:`${x.CC_x0020_name} - ${x.SAP_x0020_CC_x0020_Code}`
+                    }
+                  }).find(y=>y.DeptCost == deptCostCentre);
+      
+                  return costcentre ? costcentre.SAP_x0020_CC_x0020_Code : ""
+      
                 }
+                
+                const returnItems = cerItems.map((item)=>{
+                    const {CER_RefNo,CER_PlantId,CER_DeptCostCentreId,Created,
+                      CER_ItemStatus,FYEAR,DeptCostCentre,
+                        ProjectNPV,ProjectROI,CER_Supplemental_Ref,IsSupplemental,
+                        BudgetType,CER_NameofProject,CER_PurposeofReq,
+                        ApproveDate,Modified,
+                    } = cer;
 
-            })
-            
-            return returnItems;
-        });
-        const allItems = _.flatten(_results);
-        setData(allItems);
-        setLoading(false)
-        console.log('allItems',allItems);
+                    const CER_AssetDtlsTotalCalAmnt2 = cerItems.reduce((prev,curr)=>{
+                      return prev += parseAmount(curr.TotalQuotedAmnt2)
+                    },0);
+
+                    const _mplant = getPlantTitle(CER_PlantId);
+
+                    const cc = deptCostCentres.find(x=>x.Id == CER_DeptCostCentreId);
+
+
+                    const _annualBudget = annualBudget.find(x=>x.Title == _mplant);
+
+                    const _myAnnualbudget = _annualBudget &&  _annualBudget.ApprovedBudget ? _annualBudget.ApprovedBudget : 0;
+
+                    const _budgetType = getBudgetType(item.SelAssetCat,item.BudgetType,CER_AssetDtlsTotalCalAmnt2);
+                    
+                    return {
+                        CER:CER_RefNo,
+                        Plant:_mplant,
+                        Status:CER_ItemStatus,
+                        FYear:FYEAR,
+                        ProjectName:CER_NameofProject,
+                        Purpose:CER_PurposeofReq,
+                        ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApproveDate ? moment(ApproveDate).utc().format("DD-MM-YYYY")
+                        : moment(Modified).utc().format("DD-MM-YYYY")) : "",
+                        CERAMount:CER_AssetDtlsTotalCalAmnt2,
+                        Created:moment(Created).utc().format("DD-MM-YYYY"),
+                        AssetCategory:filterDropdownValue(item.SelAssetCat),
+                        TotalQuotedAmnt:item.TotalQuotedAmnt2,
+                        ProjectNPV:ProjectNPV || "",
+                        ProjectROI:ProjectROI || "",
+                        SupplementalNo:CER_Supplemental_Ref || "",
+                        IsSupplemental:IsSupplemental  ? "Yes":"No",
+                        BudgetIdNo:item.BudgetIndex || "",
+                        'Proj ROI/ Payback (Yrs)':ProjectROI || "",
+                        ...item,
+                        BudgetType:_budgetType,
+                        AnnualBudget:_myAnnualbudget,
+                        CostCentre:cc ? cc.Cost_x0020_Centre : getMapCCMaster(DeptCostCentre)
+                    }
+
+                })
+                
+                return returnItems;
+            });
+
+          
+          const allItems = _.flatten(_results);
+          setData(allItems);
+          setLoading(false)
+          console.log('allItems',allItems);
        
        } catch (error) {
             console.log('error',error);

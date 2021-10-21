@@ -29,6 +29,17 @@ class SiteCollectionApi {
         .get();
     }
 
+    //deptcostcenter
+    static GetDeptCostCenter(){
+        return myWeb.lists.getByTitle("DeptCostCentre")
+            .items.getAll()
+    }
+
+    static GetMapCCMaster(){
+        return myWeb.lists.getByTitle("MapCCMaster")
+            .items.getAll(5000)
+    }
+
 
 }
 
