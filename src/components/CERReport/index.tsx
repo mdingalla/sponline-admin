@@ -16,9 +16,13 @@ const columns = [
     text: 'Plant'
   },
   {
-    dataField: 'FYear',
-    text: 'FYear'
+    dataField: 'CREATED FYEAR',
+    text: 'CREATED FYEAR'
   }, 
+  {
+    dataField: 'APPROVED FYEAR',
+    text: 'APPROVED FYEAR'
+  },
   {
   dataField: 'CER',
   text: 'CER Reference'
@@ -144,7 +148,7 @@ export const CERReportPage = ()=> {
     }
 
     const handleALAExcelExport =() => {
-        alasql("SELECT Plant,FYear,CER,Status,BudgetType,BudgetIdNo,AssetCategory," 
+        alasql("SELECT Plant,[CREATED FYEAR],[APPROVED FYEAR],CER,Status,BudgetType,BudgetIdNo,AssetCategory," 
         + "Description,Purpose,CERAMount,[Proj ROI/ Payback (Yrs)],ProjectNPV,"
         + "TotalQuotedAmnt,ProjectName,ApproveDate,IsSupplemental,SupplementalNo,Created,AnnualBudget,CostCentre " 
         + "INTO XLSX('CERReport.xlsx',{headers:true}) FROM ? ",[data]);
@@ -195,6 +199,19 @@ export const CERReportPage = ()=> {
       }
     }
 
+    const  getFinancialYear = (date)=> {
+      var fiscalyear = "";
+      var mydate = new Date(date);
+      if ((mydate.getMonth() + 1) <= 7) {
+      //   fiscalyear = (today.getFullYear() - 1) + "-" + today.getFullYear()
+        return "FY" + mydate.getFullYear()
+      } else {
+      //   fiscalyear = today.getFullYear() + "-" + (today.getFullYear() + 1)
+        return "FY" + (mydate.getFullYear() + 1)
+      }
+      // return fiscalyear
+    }
+
     const filterDropdownValue = (value)=> {
       if(value){
         return value == "--Select--" ? "" : value;
@@ -206,91 +223,122 @@ export const CERReportPage = ()=> {
        try {
           setLoading(true);
 
+          const allPlants = await PlantMaster.GetPlants()
           const deptCostCentres = await SiteCollectionApi.GetDeptCostCenter();
           const mapCCMaster = await SiteCollectionApi.GetMapCCMaster();
 
           const result = await CerAPI.CERReport(new Date(date[0]),new Date(date[1]));
           const annualBudget = await CerAPI.GetAnnualBudget();
 
-          const _results = result.filter(x=>{
-          const _created = moment(x.Created);
-          const _differenceMonth = moment().diff(_created,'months',true);
+          const getFYears = _.uniq(result.map((i)=>{
+            return i.FYEAR
+          }));
 
-          
+          const getMapCCMaster = (deptCostCentre)=> {
+            const costcentre = mapCCMaster.map(x=> {
+              return {
+                ...x,
+                DeptCost:`${x.CC_x0020_name} - ${x.SAP_x0020_CC_x0020_Code}`
+              }
+            }).find(y=>y.DeptCost == deptCostCentre);
 
-            if(_differenceMonth > 6)
-            {
-              return x.CER_ItemStatus == "APPROVED";
-            }
-            return true;  
-            // return _differenceMonth > 6 && x.CER_ItemStatus.toUpperCase() != "APPROVED";
-            }).map(cer=>{
-                const cerItems:any[] = cer.CER_TblAssetDtlsMD ? JSON.parse(cer.CER_TblAssetDtlsMD) : [];
+            return costcentre ? costcentre.SAP_x0020_CC_x0020_Code : ""
+          }
 
-                const getMapCCMaster = (deptCostCentre)=> {
-                  const costcentre = mapCCMaster.map(x=> {
-                    return {
-                      ...x,
-                      DeptCost:`${x.CC_x0020_name} - ${x.SAP_x0020_CC_x0020_Code}`
-                    }
-                  }).find(y=>y.DeptCost == deptCostCentre);
-      
-                  return costcentre ? costcentre.SAP_x0020_CC_x0020_Code : ""
-      
+          const getPlant = (_cc)=>{
+            const cc = _cc.substr(0,4)
+            const plant =  allPlants.find(x=>x.Code == cc);
+            if(plant) return plant.Title
+            return ""
+          }
+
+          const allCERFYears = await Promise.all(
+            getFYears.map(async i=>{
+              const fyearQuery = await CerAPI.CERReportForFyear(i);
+              return fyearQuery.map(x=>{
+                const cc = deptCostCentres.find(dc=>dc.Id == x.CER_DeptCostCentreId);
+                const costcentre = cc ? cc.Cost_x0020_Centre : getMapCCMaster(x.DeptCostCentre);
+                const plantTitle = getPlant(costcentre);
+                return {
+                  ...x,
+                  CostCentre:cc,
+                  Plant:plantTitle
                 }
-                
-                const returnItems = cerItems.map((item)=>{
-                    const {CER_RefNo,CER_PlantId,CER_DeptCostCentreId,Created,
-                      CER_ItemStatus,FYEAR,DeptCostCentre,
-                        ProjectNPV,ProjectROI,CER_Supplemental_Ref,IsSupplemental,
-                        BudgetType,CER_NameofProject,CER_PurposeofReq,
-                        ApproveDate,Modified,
-                    } = cer;
+              });
+            })
+          )
 
-                    const CER_AssetDtlsTotalCalAmnt2 = cerItems.reduce((prev,curr)=>{
-                      return prev += parseAmount(curr.TotalQuotedAmnt2)
-                    },0);
+          const _results = result.filter(x=>{
+            const _created = moment(x.Created);
+            const _differenceMonth = moment().diff(_created,'months',true);
+              if(_differenceMonth > 6)
+              {
+                return x.CER_ItemStatus == "APPROVED";
+              }
+              return true;  
+              // return _differenceMonth > 6 && x.CER_ItemStatus.toUpperCase() != "APPROVED";
+          }).map(cer=>{
+              const cerItems:any[] = cer.CER_TblAssetDtlsMD ? JSON.parse(cer.CER_TblAssetDtlsMD) : [];
 
-                    const _mplant = getPlantTitle(CER_PlantId);
+              
 
-                    const cc = deptCostCentres.find(x=>x.Id == CER_DeptCostCentreId);
+              const getRunningTotal = (fyear,plant)=> {
+                allCERFYears.filter(x=>x.CER_ItemStatus == "APPROVED" &&
+                x)
+              }
 
+              const returnItems = cerItems.map((item)=>{
+                  const {CER_RefNo,CER_PlantId,CER_DeptCostCentreId,Created,
+                    CER_ItemStatus,FYEAR,DeptCostCentre,
+                      ProjectNPV,ProjectROI,CER_Supplemental_Ref,IsSupplemental,
+                      BudgetType,CER_NameofProject,CER_PurposeofReq,
+                      ApprovedDate,Modified,
+                  } = cer;
 
-                    const _annualBudget = annualBudget.find(x=>x.Title == _mplant);
+                  const CER_AssetDtlsTotalCalAmnt2 = cerItems.reduce((prev,curr)=>{
+                    return prev += parseAmount(curr.TotalQuotedAmnt2)
+                  },0);
 
-                    const _myAnnualbudget = _annualBudget &&  _annualBudget.ApprovedBudget ? _annualBudget.ApprovedBudget : 0;
+                  const _mplant = getPlantTitle(CER_PlantId);
 
-                    const _budgetType = getBudgetType(item.SelAssetCat,item.BudgetType,CER_AssetDtlsTotalCalAmnt2);
-                    
-                    return {
-                        CER:CER_RefNo,
-                        Plant:_mplant,
-                        Status:CER_ItemStatus,
-                        FYear:FYEAR,
-                        ProjectName:CER_NameofProject,
-                        Purpose:CER_PurposeofReq,
-                        ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApproveDate ? moment(ApproveDate).utc().format("DD-MM-YYYY")
-                        : moment(Modified).utc().format("DD-MM-YYYY")) : "",
-                        CERAMount:CER_AssetDtlsTotalCalAmnt2,
-                        Created:moment(Created).utc().format("DD-MM-YYYY"),
-                        AssetCategory:filterDropdownValue(item.SelAssetCat),
-                        TotalQuotedAmnt:item.TotalQuotedAmnt2,
-                        ProjectNPV:ProjectNPV || "",
-                        ProjectROI:ProjectROI || "",
-                        SupplementalNo:CER_Supplemental_Ref || "",
-                        IsSupplemental:IsSupplemental  ? "Yes":"No",
-                        BudgetIdNo:item.BudgetIndex || "",
-                        'Proj ROI/ Payback (Yrs)':ProjectROI || "",
-                        ...item,
-                        BudgetType:_budgetType,
-                        AnnualBudget:_myAnnualbudget,
-                        CostCentre:cc ? cc.Cost_x0020_Centre : getMapCCMaster(DeptCostCentre)
-                    }
+                  const cc = deptCostCentres.find(x=>x.Id == CER_DeptCostCentreId);
 
-                })
-                
-                return returnItems;
-            });
+                  const _annualBudget = annualBudget.find(x=>x.Title == _mplant);
+
+                  const _myAnnualbudget = _annualBudget &&  _annualBudget.ApprovedBudget ? _annualBudget.ApprovedBudget : 0;
+
+                  const _budgetType = getBudgetType(item.SelAssetCat,item.BudgetType,CER_AssetDtlsTotalCalAmnt2);
+                  
+                  return {
+                      CER:CER_RefNo,
+                      Plant:_mplant,
+                      Status:CER_ItemStatus,
+                      'CREATED FYEAR':FYEAR,
+                      'APPROVED FYEAR':ApprovedDate ? getFinancialYear(ApprovedDate) : "",
+                      ProjectName:CER_NameofProject,
+                      Purpose:CER_PurposeofReq,
+                      ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApprovedDate ? moment(ApprovedDate).utc().format("DD-MM-YYYY")
+                      : "") : "",
+                      // : moment(Modified).utc().format("DD-MM-YYYY")) : "",
+                      CERAMount:CER_AssetDtlsTotalCalAmnt2,
+                      Created:moment(Created).utc().format("DD-MM-YYYY"),
+                      AssetCategory:filterDropdownValue(item.SelAssetCat),
+                      TotalQuotedAmnt:item.TotalQuotedAmnt2,
+                      ProjectNPV:ProjectNPV || "",
+                      ProjectROI:ProjectROI || "",
+                      SupplementalNo:CER_Supplemental_Ref || "",
+                      IsSupplemental:IsSupplemental  ? "Yes":"No",
+                      BudgetIdNo:item.BudgetIndex || "",
+                      'Proj ROI/ Payback (Yrs)':ProjectROI || "",
+                      ...item,
+                      BudgetType:_budgetType,
+                      AnnualBudget:_myAnnualbudget,
+                      CostCentre:cc ? cc.Cost_x0020_Centre : getMapCCMaster(DeptCostCentre)
+                  }
+
+              })
+              return returnItems;
+          });
 
           
           const allItems = _.flatten(_results);

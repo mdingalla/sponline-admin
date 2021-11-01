@@ -210,6 +210,27 @@ class CerAPI {
         .getAll(5000)
   }
 
+  static CERReportForFyear(Fyear){
+    const xml = `<View>
+        <Query>
+            <Where>
+                    <Eq>
+                        <FieldRef Name='FYEAR'/>
+                        <Value Type='Text'>${Fyear}</Value>
+                    </Eq>
+            </Where>
+        </Query>
+      </View>`;
+
+    const camlQuery: CamlQuery = {
+      ViewXml: xml
+    };
+    return myWeb.lists.getByTitle(CER)
+      .getItemsByCAMLQuery(camlQuery);
+}
+
+
+
   static GetAnnualBudget(){
     return myWeb.lists.getByTitle("AnnualBudget")
       .items
