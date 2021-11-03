@@ -18,7 +18,11 @@ const columns = [
   {
     dataField: 'CREATED FYEAR',
     text: 'CREATED FYEAR'
-  }, 
+  },
+  // {
+  //   dataField: 'MODIFIED FYEAR',
+  //   text: 'MODIFIED FYEAR'
+  // },
   {
     dataField: 'APPROVED FYEAR',
     text: 'APPROVED FYEAR'
@@ -89,6 +93,14 @@ const columns = [
   text: 'Created'
 },
 {
+  dataField: 'Modified',
+  text: 'Modified'
+},
+{
+  dataField: 'ApprovedDate',
+  text: 'ApprovedDate'
+},
+{
   dataField: 'AnnualBudget',
   text: 'AnnualBudget'
 },
@@ -150,7 +162,7 @@ export const CERReportPage = ()=> {
     const handleALAExcelExport =() => {
         alasql("SELECT Plant,[CREATED FYEAR],[APPROVED FYEAR],CER,Status,BudgetType,BudgetIdNo,AssetCategory," 
         + "Description,Purpose,CERAMount,[Proj ROI/ Payback (Yrs)],ProjectNPV,"
-        + "TotalQuotedAmnt,ProjectName,ApproveDate,IsSupplemental,SupplementalNo,Created,AnnualBudget,CostCentre " 
+        + "TotalQuotedAmnt,ProjectName,ApproveDate,IsSupplemental,SupplementalNo,Created,Modified,ApprovedDate,AnnualBudget,CostCentre " 
         + "INTO XLSX('CERReport.xlsx',{headers:true}) FROM ? ",[data]);
     }
 
@@ -202,7 +214,7 @@ export const CERReportPage = ()=> {
     const  getFinancialYear = (date)=> {
       var fiscalyear = "";
       var mydate = new Date(date);
-      if ((mydate.getMonth() + 1) <= 7) {
+      if ((mydate.getMonth() + 1) < 7) {
       //   fiscalyear = (today.getFullYear() - 1) + "-" + today.getFullYear()
         return "FY" + mydate.getFullYear()
       } else {
@@ -315,6 +327,7 @@ export const CERReportPage = ()=> {
                       Status:CER_ItemStatus,
                       'CREATED FYEAR':FYEAR,
                       'APPROVED FYEAR':ApprovedDate ? getFinancialYear(ApprovedDate) : "",
+                      // 'MODIFIED FYEAR':Modified ? getFinancialYear(Modified) : "",
                       ProjectName:CER_NameofProject,
                       Purpose:CER_PurposeofReq,
                       ApproveDate:CER_ItemStatus == 'APPROVED' ? (ApprovedDate ? moment(ApprovedDate).utc().format("DD-MM-YYYY")
@@ -322,6 +335,8 @@ export const CERReportPage = ()=> {
                       // : moment(Modified).utc().format("DD-MM-YYYY")) : "",
                       CERAMount:CER_AssetDtlsTotalCalAmnt2,
                       Created:moment(Created).utc().format("DD-MM-YYYY"),
+                      Modified:moment(Modified).utc().format("DD-MM-YYYY"),
+                      ApprovedDate:moment(ApprovedDate).utc().format("DD-MM-YYYY"),
                       AssetCategory:filterDropdownValue(item.SelAssetCat),
                       TotalQuotedAmnt:item.TotalQuotedAmnt2,
                       ProjectNPV:ProjectNPV || "",

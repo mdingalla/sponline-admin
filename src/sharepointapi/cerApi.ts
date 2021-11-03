@@ -235,7 +235,23 @@ class CerAPI {
     return myWeb.lists.getByTitle("AnnualBudget")
       .items
       .getAll(5000)
-}
+  } 
+
+  static GetApprovedNoApprovedDate(){
+    return myWeb.lists.getByTitle("CER")
+      .items
+      .filter(`CER_ItemStatus eq 'APPROVED' and ApprovedDate eq null`)
+      .expand("Versions")
+      .get()
+  }
+
+
+  static GetApprovedCERs(){
+    return myWeb.lists.getByTitle("CER")
+      .items
+      .filter(`CER_ItemStatus eq 'APPROVED' and ApprovedDate ne null`)
+      .get()
+  }
 }
 
 export default CerAPI;

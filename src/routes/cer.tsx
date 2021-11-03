@@ -7,6 +7,7 @@ import Dashboard from "../containers/CERReport";
 const AppRoutes = () => (
   <div className="container-fluid">
     <Route exact path={CERReportPagePath} component={withRouter(Dashboard)} />
+    <Route exact path={`${CERReportPagePath}/approvaldatefix`} component={withRouter(Dashboard)} />
   </div>
 );
 
