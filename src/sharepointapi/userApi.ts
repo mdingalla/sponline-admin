@@ -43,6 +43,10 @@ class UserApi {
   static GetUserById(id){
     return sp.web.siteUserInfoList.items.getById(id).get();
   }
+
+  static GetUserByEmail(email){
+    return sp.web.siteUsers.getByEmail(email);
+  }
 }
 
 export default UserApi;

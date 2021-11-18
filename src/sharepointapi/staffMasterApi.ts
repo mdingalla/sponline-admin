@@ -220,7 +220,7 @@ class StaffMasterApi {
       .getAll(20000)
   }
 
-  static CreateOrUpdate(payload,id){
+  static CreateOrUpdate(payload,id=null){
     if(id)
     {
       return myWeb.lists.getByTitle(staffmaster)
@@ -232,6 +232,19 @@ class StaffMasterApi {
       .items.add(payload);
     }
   }
+
+  static GetAllStaffByPlant(plant){ // HITL/IHIL
+    return myWeb.lists
+    .getByTitle(staffmaster)
+    .items
+    .expand('WindowsID,Manager')
+    .select("*,WindowsID/EMail,WindowsID/Name,WindowsID/Title,Manager/EMail,Manager/Name")
+    .filter(`Plant eq '${plant}'`)
+    .top(2000)
+    .get();
+  }
+
+
   
 }
 
