@@ -1,8 +1,12 @@
 import {sp, RenderListDataOptions, RenderListDataParameters, ContentType, Web, CamlQuery, PagedItemCollection} from '@pnp/sp'
 import { SPCostCenterRequest } from '../../types/models';
+import { FetchClient } from "@pnp/common";
+
+const client = new FetchClient();
 
 import { stat } from "fs";
 import { IPersonaProps } from "@fluentui/react";
+import { version } from 'punycode';
 const ALL = "ALL";
 const CER = "CER";
 const ADT = "AssetDisposal";
@@ -251,6 +255,39 @@ class CerAPI {
       .items
       .filter(`CER_ItemStatus eq 'APPROVED' and ApprovedDate ne null`)
       .get()
+  }
+
+
+  static GetAllCERVersion(version){
+    return myWeb.lists.getByTitle("CER")
+      .items
+      .filter(`CERVersion eq '${version}'`)
+      .expand("Versions")
+      .get()
+  }
+
+  static GetAllCER(){
+    return myWeb.lists.getByTitle("CER")
+      .items
+      .getAll(3000)
+  }
+
+
+  static async RevertCER(id,versionid){
+
+    const list = await myWeb.lists.getByTitle("CER").get();
+
+    // return await myWeb.lists.getByTitle("CER").items.getById(id)
+    // .file.versions.restoreByLabel(versionLabel)
+
+    // var url = `https://interplexgroup.sharepoint.com/sites/app/cer/_api/Web/Lists/getbytitle('CER)/items(${id})/Versions/restoreByLabel('${label}')`
+
+
+    var url = `/sites/{029a1c38-4aa1-47c4-828d-7ef2b7b92056}/lists/{2F430205-2A3E-4623-9A82-501581D5899E}/items/${id}/versions/${versionid}/restoreVersion`
+    return client.fetch(url,{
+      method:"POST",
+      // credentials:"same-origin"
+    }) 
   }
 }
 

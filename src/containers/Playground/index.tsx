@@ -9,7 +9,7 @@ import travelWrapper from "../../components/TravelHOC";
 import {HoDImport} from "../../components/HOD";
 
 import { SharePointRestResult } from "../../../types/models";
-import { UpdateIHILStaffMaster } from "../../components/CERFix/updateIHILHITL";
+import { UpdateCERAssetFix } from "../../components/CERFix/cerassetFix";
 // import UploadSupplierOnline from "../../components/SPOnline/uploadSupplier";
 
 export namespace Playground {
@@ -46,7 +46,7 @@ export class Playground extends React.Component<
       <div className="col-md-12">
         <div className="row-fluid">
           <div className="col-lg-12">
-            <UpdateIHILStaffMaster />
+            {/* <UpdateCERAssetFix /> */}
             {/* <HoDImport plant={plant} /> */}
             {/* <SupplierMasterVendorCode /> */}
             {/* <PTCGLItemFix /> */}
