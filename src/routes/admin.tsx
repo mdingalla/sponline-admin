@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Route } from "react-router";
-import { AdminPagePath, GroupsPagePath, GroupsPath, pagePath, SignatoryAdminPagePath, StaffImportPagePath, SupplierMasterSyncPath, SupplierUpdateAdminPagePath, TRAdmin, TRImportPagePath } from "../constants/config";
+import { AdminPagePath, GroupsPagePath, GroupsPath, pagePath, SignatoryAdminPagePath, StaffImportPagePath, SupplierMasterSyncPath, SupplierMasterSyncPath2, SupplierUpdateAdminPagePath, TRAdmin, TRImportPagePath } from "../constants/config";
 import { withRouter } from "react-router";
 import Playground from "../containers/Playground";
 import PlantMasterContainer from "../containers/PlantMaster";
@@ -12,6 +12,7 @@ const AppRoutes = () => (
     <Route exact path={AdminPagePath} component={withRouter(Dashboard)} />
     <Route  path={TRImportPagePath} component={withRouter(Dashboard)} />
     <Route  path={SupplierMasterSyncPath} component={withRouter(Dashboard)} />
+    <Route  path={SupplierMasterSyncPath2} component={withRouter(Dashboard)} />
     <Route  path={TRAdmin} component={withRouter(Dashboard)} />
     <Route  path={GroupsPagePath} component={withRouter(Dashboard)} />
     <Route  path={StaffImportPagePath} component={withRouter(Dashboard)} />

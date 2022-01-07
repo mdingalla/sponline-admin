@@ -7,6 +7,7 @@ import { CERReportPage } from '../../components/CERReport';
 import { CERReportPagePath, GroupsPagePath } from '../../constants/config';
 import GroupsPage from '../../components/Groups';
 import { CERApprovalDateFix } from '../../components/CERReport/approvalfix';
+import CERBudget from '../../components/CERReport/budget';
 
 export namespace Dashboard {
   export interface Props extends RouteComponentProps<void> {
@@ -37,9 +38,14 @@ export class Dashboard extends React.Component<Dashboard.Props, Dashboard.State>
         form = <GroupsPage />;
         break;
 
-      case `${CERReportPagePath}/approvaldatefix`:
-        form = <CERApprovalDateFix />
-        break;
+
+        case `${CERReportPagePath}/budget`:
+          form = <CERBudget />
+          break;
+
+      // case `${CERReportPagePath}/approvaldatefix`:
+      //   form = <CERApprovalDateFix />
+      //   break;
       
     
       default:

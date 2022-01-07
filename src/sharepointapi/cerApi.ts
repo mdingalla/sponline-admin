@@ -214,6 +214,12 @@ class CerAPI {
         .getAll(5000)
   }
 
+
+
+
+
+
+
   static CERReportForFyear(Fyear){
     const xml = `<View>
         <Query>
@@ -224,10 +230,18 @@ class CerAPI {
                     </Eq>
             </Where>
         </Query>
+        <ViewFields>
+            <FieldRef Name="ID"></FieldRef>
+            <FieldRef Name="Title"></FieldRef>
+            <FieldRef Name="CER_Plant"></FieldRef>
+            <FieldRef Name="CER_AssetDtlsTotalCalAmnt2"></FieldRef>
+            <FieldRef Name="CER_TblAssetDtlsMD"></FieldRef>
+            <FieldRef Name="CER_ItemStatus"></FieldRef>
+        </ViewFields>
       </View>`;
 
     const camlQuery: CamlQuery = {
-      ViewXml: xml
+      ViewXml: xml,
     };
     return myWeb.lists.getByTitle(CER)
       .getItemsByCAMLQuery(camlQuery);
@@ -239,6 +253,14 @@ class CerAPI {
     return myWeb.lists.getByTitle("AnnualBudget")
       .items
       .getAll(5000)
+  } 
+
+  static GetAnnualBudgetByFyear(fyear){
+    return myWeb.lists.getByTitle("AnnualBudget")
+      .items
+      .filter(`FYEAR eq '${fyear}'`)
+      .top(2000)
+      .get()
   } 
 
   static GetApprovedNoApprovedDate(){
@@ -265,6 +287,36 @@ class CerAPI {
       .expand("Versions")
       .get()
   }
+
+
+  static GETPendingCERs(version){
+
+    return myWeb.lists.getByTitle("CER")
+      .items
+      .filter(`CERVersion eq '${version}' and CER_ItemStatus ne 'APPROVED' and CER_ItemStatus ne 'DRAFT' and CER_ItemStatus ne 'WITHDRAW' and CER_ItemStatus ne 'REJECTED'`)
+      .expand("Versions,CER_Approval_MgrHODPlantFin,CER_Approval_GM_RCOO,CER_Approval_GFH_CFO,CER_Approval_GroupCOO,CER_Approval_GroupCFO")
+     .select('*,CER_Approval_MgrHODPlantFin/Id,CER_Approval_GM_RCOO/Id,CER_Approval_GFH_CFO/Id,CER_Approval_GroupCOO/Id,CER_Approval_GroupCFO/Id')
+      .getAll()
+  }
+
+
+  static test(){
+    var url = `${_spPageContextInfo.webAbsoluteUrl}_api/web/lists/getByTitle('CER')/items?
+    $filter=CER_ItemStatus ne 'APPROVED'
+    $expand=Versions,CER_Approval_MgrHODPlantFin,CER_Approval_GM_RCOO,CER_Approval_GFH_CFO,CER_Approval_GroupCOO,CER_Approval_GroupCFO
+    &$select=*,CER_Approval_MgrHODPlantFin/EMail,CER_Approval_GM_RCOO/EMail,CER_Approval_GFH_CFO/EMail,CER_Approval_GroupCOO/EMail,CER_Approval_GroupCFO/EMail`
+
+    console.log('GETPendingCERs Url',url);
+
+    const request =  client.fetch(`${url}`,{
+          credentials:"same-origin",
+          method:"GET"
+          });
+
+    return request
+  }
+
+
 
   static GetAllCER(){
     return myWeb.lists.getByTitle("CER")

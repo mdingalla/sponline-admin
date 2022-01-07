@@ -23,6 +23,7 @@ export const SupplierMasterVendorCode:React.FunctionComponent = ()=> {
     const query = async ()=> {
         if(vendorcode){
             const url = `https://192.168.65.88/api/supplier/${vendorcode}`;
+            // const url = `http://192.168.65.88/api/supplier/${vendorcode}`;
             fetch(url)
             .then(response => response.json())
             .then(data => setData([data]));

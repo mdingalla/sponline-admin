@@ -2,6 +2,7 @@ export const pagePath = _spPageContextInfo.webServerRelativeUrl + "Pages/MainApp
 export const AdminPagePath = _spPageContextInfo.webServerRelativeUrl + "/Pages/AdminApp.aspx";
 export const TRImportPagePath = `${AdminPagePath}/trdetailsimport`;
 export const SupplierMasterSyncPath = `${AdminPagePath}/suppliersync`;
+export const SupplierMasterSyncPath2 = `${AdminPagePath}/suppliersync2`;
 export const TRAdmin = `${AdminPagePath}/trutil`;
 export const GroupsPagePath = `${AdminPagePath}/spgroups`;
 export const GroupsPath = `${AdminPagePath}/group`;

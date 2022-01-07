@@ -148,30 +148,63 @@ export const UpdateCERAssetFix = ()=> {
             </Dropzone></div>
 
 
-      const RevertHistory = async ()=> {
+      const UpdateApprovers = async ()=> {
+
+            //get pending CERS
+            const _result = await CerAPI.GETPendingCERs(2);
+
+            console.log(_result)
+
+
+            _result.map((cer)=>{
+
+                const CER_APPROVERS_ARRAY = cer.CERApproversJSON ? JSON.parse(cer.CERApproversJSON) : [];
+
+                
+
+                const history = cer.Versions  && cer.Versions.results ? cer.Versions.results : [];
+
+
+
+                const varCurrFetchedItmStatus = cer.CER_ItemStatus;
+
+                const newApprovers = CER_APPROVERS_ARRAY.map((x,idx)=>{
         
-        const targetVersion = "3";
-        const cer3 = await CerAPI.GetAllCERVersion(targetVersion);
-
-        cer3.map(async cer=>{
-
-            const versions = cer.Versions.results;
-            //get previous version
-            const prev = versions.find(x=>x.CERVersion != targetVersion);
-
-            if(prev)
-            {
-                console.log(prev);
-                await CerAPI.RevertCER(cer.Id,prev.VersionId);
-                // await CerAPI.RevertCER(cer.Id,prev.VersionLabel);
-            }
-
+                    var email = x.Name.replace('i:0#.f|membership|','');
             
+                    var findLastModified = history.find(x=>x.IsWorkflow 
+                        && x.CER_ItemStatus != "REJECTED" && x.Editor.Email == email)
+            
+                    var _status = x.Status;
+                    var _statusDate = x.StatusDate;
+            
+                    var status = _status;
+            
+                    if(findLastModified && findLastModified.ApproverComments)
+                    {
+                        if(findLastModified.ApproverComments.startsWith('Approved By#'))
+                        {
+                            status = "Approved"
+                        }
+                        if(findLastModified.ApproverComments.startsWith('Rejected By#')
+                        && varCurrFetchedItmStatus == "REJECTED")
+                        {
+                            status = "Rejected"
+                        }
+                    }
+            
+                    var statusDate = _statusDate || (findLastModified ? findLastModified.Last_x005f_x0020_x005f_Modified : null)
+            
+                    return {
+                        ...x,
+                        Status:status,
+                        StatusDate:statusDate,
+                        Immutable:true
+                    }
+                })
 
-        })
-
-        // CerAPI.RevertCER(null,null)
-
+                console.log('newApprovers',newApprovers)
+            })
       }
 
     return <div>
@@ -181,11 +214,11 @@ export const UpdateCERAssetFix = ()=> {
         <div>{dropzone}</div>
 
         <div>
-        {data.length > 0 &&  <button type="button" className="btn btn-primary"
-        onClick={ProcessUpdate}>Process</button>}
+        {/* {data.length > 0 &&  <button type="button" className="btn btn-primary"
+        onClick={ProcessUpdate}>Process</button>} */}
 
-            <button type="button" className="btn btn-primary"
-        onClick={RevertHistory}>Revert History</button>
+            {/* <button type="button" className="btn btn-primary"
+        onClick={UpdateApprovers}>Update Approval</button> */}
         </div>
     </div>
 }

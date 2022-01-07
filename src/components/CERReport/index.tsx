@@ -122,6 +122,7 @@ import CerAPI from '../../sharepointapi/cerApi';
 import PlantMaster from '../../sharepointapi/plantMasterApi';
 import * as _ from 'lodash';
 import SiteCollectionApi from '../../sharepointapi/siteCollection';
+
 export const CERReportPage = ()=> {
 
     const [date,setDate] = React.useState(null);
