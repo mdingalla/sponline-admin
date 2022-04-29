@@ -12,7 +12,8 @@ class FinanceHelper {
       }
 
     static ParseAmount = (amt)=>{
-      return parseFloat(amt.toString().replace(/,/g,''))
+      if(amt)  return parseFloat(amt.toString().replace(/,/g,''));
+      return 0;
     }
 
     static GetBudgetType = (budgetType,assetClass,cer_total,) => {

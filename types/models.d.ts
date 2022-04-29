@@ -152,6 +152,8 @@ declare interface GLItem {
   Method: string;
   ExpenseCategory?: string;
   Employee?: string;
+  DateExpenseValue?:any;
+  EmpName?:string;
   // NewDate?:Date;
 }
 
@@ -305,4 +307,10 @@ declare interface SPCostCenterRequest {
   "ACKPPLPAYROLLCOMMENTS"?: string,
   WFlowCounter?:number,
   WFlowMessage?:string
+}
+
+declare interface GLReportItems {
+  glaccounts: any[];
+  data: any[];
+  querying: boolean;
 }

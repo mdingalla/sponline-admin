@@ -110,7 +110,7 @@ label {
 
 @media (min-width: 768px){
     #mainLayout{
-        padding-left: 225px;
+        /* padding-left: 225px; */
         
     }
 }

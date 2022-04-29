@@ -8,7 +8,7 @@ const AppRoutes = () => (
   <div className="container-fluid">
     <Route exact path={CERReportPagePath} component={withRouter(Dashboard)} />
     <Route exact path={`${CERReportPagePath}/budget`} component={withRouter(Dashboard)} />
-    <Route exact path={`${CERReportPagePath}/approvaldatefix`} component={withRouter(Dashboard)} />
+    <Route exact path={`${CERReportPagePath}/cerfix`} component={withRouter(Dashboard)} />
   </div>
 );
 

@@ -1,6 +1,6 @@
 import {sp, RenderListDataOptions, RenderListDataParameters, ContentType, Web, CamlQuery, PagedItemCollection} from '@pnp/sp'
-import { SPCostCenterRequest } from '../../types/models';
-
+import { IRenderListDataAsStreamResult, SPCostCenterRequest } from '../../types/models';
+import CamlBuilder = require("camljs");
 import { GLItem } from "../../types/models";
 
 const PettyCashReimbursementRequest = "PettyCashReimbursementRequest";
@@ -64,26 +64,76 @@ class PettyCashApi {
       .get();
   }
 
-  static GLReportQuery(
+  static GLReportQuery2(
     startDt: Date,
     endDt: Date
   ): Promise<PagedItemCollection<GLItem[]>> {
     let fields =
       "Method,Amount,GLAccount,ClaimType,BusinessArea,Department,CostCentre,Title,Curr,EmpNo,PayTo,DteExpenseDate,ExpenseDate";
-    let filter =
-      "substringof('/" +
-      startDt.getFullYear() +
-      "',ExpenseDate) or substringof('/" +
-      endDt.getFullYear() +
-      "',ExpenseDate)";
+    // let filter =
+    //   "substringof('/" +
+    //   startDt.getFullYear() +
+    //   "',ExpenseDate) or substringof('/" +
+    //   endDt.getFullYear() +
+    //   "',ExpenseDate)";
+    let filter = `Created gt datetime'${startDt.toISOString()}' and Created le datetime'${endDt.toISOString()}'`;
+    return (
+      myWeb.lists
+        .getByTitle(GLITEMS)
+        .items
+        .filter(filter)
+        // .select('*,Author/Id,Author/Title,Editor/Id,Editor/Title').expand('Author/Id,Author/Title,Editor/Id,Editor/Title')
+        .getPaged()
+    );
+  }
+
+  static GLReportQuery(
+    startDt: Date,
+    endDt: Date
+  ): Promise<any[]> {
+    let fields =
+      "Method,Amount,GLAccount,ClaimType,BusinessArea,Department,CostCentre,Title,Curr,EmpNo,PayTo,DteExpenseDate,ExpenseDate";
+    // let filter =
+    //   "substringof('/" +
+    //   startDt.getFullYear() +
+    //   "',ExpenseDate) or substringof('/" +
+    //   endDt.getFullYear() +
+    //   "',ExpenseDate)";
+    let filter = `Created gt datetime'${startDt.toISOString()}' and Created le datetime'${endDt.toISOString()}'`;
     return (
       myWeb.lists
         .getByTitle(GLITEMS)
         .items.select(fields)
         .filter(filter)
         // .select('*,Author/Id,Author/Title,Editor/Id,Editor/Title').expand('Author/Id,Author/Title,Editor/Id,Editor/Title')
-        .getPaged()
+        .getAll()
     );
+  }
+
+
+  static GLReportCamlQuery(
+    startDt: Date,
+    endDt: Date
+  ): Promise<IRenderListDataAsStreamResult> {
+    const camlquery = new CamlBuilder();
+
+    let query = camlquery.Where()
+      .DateField("PTCExpenseDate").GreaterThanOrEqualTo(startDt).And().DateField("PTCExpenseDate").LessThanOrEqualTo(endDt);
+
+    const xml = `<View>
+      <Query><RowLimit Paged="TRUE">10000</RowLimit>
+      ${query.ToString()}</Query>
+      </View>`
+    
+    let fields =
+      "Method,Amount,GLAccount,ClaimType,BusinessArea,Department,CostCentre,Title,Curr,EmpNo,PayTo,DteExpenseDate,ExpenseDate";
+   
+      return myWeb.lists.getByTitle(GLITEMS)
+      .renderListDataAsStream({
+        ViewXml:xml
+      })
+
+    
   }
 
   static getNextCall(

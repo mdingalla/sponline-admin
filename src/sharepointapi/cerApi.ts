@@ -288,6 +288,14 @@ class CerAPI {
       .get()
   }
 
+  static GetCERVersion(version){
+    return myWeb.lists.getByTitle("CER")
+      .items
+      .filter(`CERVersion eq '${version}'`)
+      .top(5000)
+      .get()
+  }
+
 
   static GETPendingCERs(version){
 

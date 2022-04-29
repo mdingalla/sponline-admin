@@ -43,9 +43,9 @@ export class Dashboard extends React.Component<Dashboard.Props, Dashboard.State>
           form = <CERBudget />
           break;
 
-      // case `${CERReportPagePath}/approvaldatefix`:
-      //   form = <CERApprovalDateFix />
-      //   break;
+      case `${CERReportPagePath}/cerfix`:
+        form = <CERApprovalDateFix />
+        break;
       
     
       default:

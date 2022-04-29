@@ -157,7 +157,8 @@ export const CERReportPage = ()=> {
   }
 
     function parseAmount(amt){
-      return parseFloat(amt.toString().replace(/,/g,''))
+      if(amt) return parseFloat(amt.toString().replace(/,/g,''))
+      return 0;
     }
 
     const handleALAExcelExport =() => {

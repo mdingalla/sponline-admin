@@ -58,15 +58,60 @@ export const CERApprovalDateFix = ()=> {
         }
     }
 
+
+    const ClearComputerSofware = async ()=> {
+        try {
+            
+
+            const CERs = await CerAPI.GetCERVersion("2");
+
+            CERs.map((cer)=>{
+
+                const cerItems:any[] = cer.CER_TblAssetDtlsMD ? JSON.parse(cer.CER_TblAssetDtlsMD) : [];
+
+                const hasWrong = cerItems.some(z=>z.SelAssetCat == "4500-Computer Sofware");
+
+                if(hasWrong){
+                    const cloneItems = cerItems.map(z=>{
+                        if(z.SelAssetCat == "4500-Computer Sofware")
+                        {
+                            return {
+                                ...z,
+                                SelAssetCat:"4500-Computer Software"
+                            }
+                        }
+                        else
+                        {
+                            return z
+                        }
+                    })
+                    //update cer here:
+                    console.log(cloneItems)
+                    CerAPI.UpdateCER(cer.Id,{
+                        CER_TblAssetDtlsMD:JSON.stringify(cloneItems)
+                    });
+                }
+
+            })
+
+        } catch (error) {
+            
+        }
+    }
+
     return <div>
          {loading && <div className={style.spincontainer}>
         <Spin size="large"  />
         </div>}
-        <h4>CER Approval Date Fix</h4>
+        {/* <h4>CER Approval Date Fix</h4> */}
 
-        <button type="button" onClick={FixApproveDates}>Fix</button>
+        {/* <button type="button" onClick={FixApproveDates}>Fix</button>
 
-        <button type="button" onClick={ClearApproveDates}>Clear</button>
+        <button type="button" onClick={ClearApproveDates}>Clear</button> */}
+
+        <h4>Correct Asset Category</h4>
+
+        <button type="button" onClick={ClearComputerSofware}>Correct</button>
 
 
     </div>

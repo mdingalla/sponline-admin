@@ -6,6 +6,7 @@ import Playground from "../containers/Playground";
 import PlantMasterContainer from "../containers/PlantMaster";
 import Dashboard from "../containers/Dashboard";
 import GroupContainer from "../containers/Groups";
+import GLReport from "../containers/GLReport";
 
 const AppRoutes = () => (
   <div className="container-fluid">
@@ -21,6 +22,7 @@ const AppRoutes = () => (
     <Route path={SupplierUpdateAdminPagePath} component={withRouter(Dashboard)} />
     <Route path={AdminPagePath + "/test"} component={withRouter(Playground)} />
     <Route path={AdminPagePath + "/test/:id"} component={withRouter(Playground)} />
+    <Route path={AdminPagePath + "/glreport"} component={withRouter(GLReport)} />
   </div>
 );
 
