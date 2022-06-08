@@ -12,13 +12,14 @@ import travelWrapper from '../../components/TravelHOC';
 import '!style-loader!css-loader!./override.css';
 import { TodoItemData } from '../../../types/models';
 import { PettyCashPTCGLItemImport } from '../../components/PettyCash';
-import { GroupsPagePath, StaffImportPagePath, SupplierMasterSyncPath, SupplierMasterSyncPath2, SupplierUpdateAdminPagePath, TRAdmin, TRImportPagePath } from '../../constants/config';
+import { GroupsPagePath, StaffImportPagePath, SupplierMasterSyncPath, SupplierMasterSyncPath2, SupplierUpdateAdminPagePath, TRAdmin, TRImportPagePath, UpdateSupplierFromXML } from '../../constants/config';
 import { TravelDetailsImport } from '../../components/Travel/import';
 import { TravelAdmin } from '../../components/TRAdmin';
 import GroupsPage from '../../components/Groups';
 import { SupplierMasterVendorCode } from '../../components/SupplierMaster';
 import {StaffImport} from '../../components/StaffMaster/import';
 import { SupplierMasterVendorJSONCode } from '../../components/SupplierMaster/sync2';
+import { UpdateSupplierFromXMLPage } from '../../components/SupplierMaster/syncXML';
 
 export namespace Dashboard {
   export interface Props extends RouteComponentProps<void> {
@@ -70,6 +71,11 @@ export class Dashboard extends React.Component<Dashboard.Props, Dashboard.State>
         case SupplierMasterSyncPath2:
           form = <SupplierMasterVendorJSONCode />;
           break;
+
+
+          case UpdateSupplierFromXML:
+            form = <UpdateSupplierFromXMLPage />;
+            break;
 
         case StaffImportPagePath:
           form = <StaffImport />;

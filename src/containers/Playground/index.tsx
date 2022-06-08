@@ -46,7 +46,7 @@ export class Playground extends React.Component<
       <div className="col-md-12">
         <div className="row-fluid">
           <div className="col-lg-12">
-            <UpdateCERAssetFix />
+            {/* <UpdateCERAssetFix /> */}
             {/* <HoDImport plant={plant} /> */}
             {/* <SupplierMasterVendorCode /> */}
             {/* <PTCGLItemFix /> */}
