@@ -25,11 +25,16 @@ export namespace SPGroupTable {
     }
 }
 
+const hrefStyle = {
+    display:'none'
+}
+
 class SPGroupTable extends React.Component<SPGroupTable.Props,SPGroupTable.State>{
     constructor(props){
         super(props);
 
         this.updatePosition = this.updatePosition.bind(this)
+        this.tableToExcel = this.tableToExcel.bind(this)
 
         this.state ={
             message:'',
@@ -90,13 +95,42 @@ class SPGroupTable extends React.Component<SPGroupTable.Props,SPGroupTable.State
 
     }
 
+    tableToExcel(table, name, filename){
+        var uri = 'data:application/vnd.ms-excel;base64,'
+        , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+        , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+        , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+       
+            if (!table.nodeType) table = document.getElementById(table)
+            var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+            document.getElementById("dlink").setAttribute('href',uri + base64(format(template, ctx)));
+            document.getElementById("dlink").setAttribute('download',filename);
+            // document.getElementById("dlink").href = uri + base64(format(template, ctx));
+            // document.getElementById("dlink").download = filename;
+            document.getElementById("dlink").click();
+
+        
+    }
+
     
     render(){
 
         return <div className="row">
                 <h4>{this.state.message}</h4>
                 <div>
-                    <table className="table table-condensed">
+                <div>
+                <a id="dlink" style={hrefStyle}></a>
+<input type="button" onClick={()=>{this.tableToExcel('tblGroup', 'name', 'myfile.xls')}} value="Export to Excel" />
+                </div>
+                    <table id='tblGroup' className="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Plant</th>
+                                <th>Position</th>
+                                <th>Department</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             {this.state.items.map((i,idx)=>{
                                 return <tr key={idx}>
