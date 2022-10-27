@@ -16,6 +16,15 @@ const columns = [
     text: 'Plant'
   },
   {
+    dataField: 'CompanyCode',
+    text: 'Company Code'
+  },
+  {
+    dataField: 'PlantCode',
+    text: 'Plant Code'
+  },
+
+  {
     dataField: 'CREATED FYEAR',
     text: 'CREATED FYEAR'
   },
@@ -150,6 +159,18 @@ export const CERReportPage = ()=> {
         return ""
     }
 
+    const getPlantCode = (id)=> {
+      const plant = plants.find(x=>x.Id == id);
+      if(plant) return plant.Code;
+      return ""
+  }
+
+  const getPlantCompanyCode = (id)=> {
+    const plant = plants.find(x=>x.Id == id);
+    if(plant) return plant.CompanyCode;
+    return ""
+}
+
     const getPlant = (id)=> {
       const plant = plants.find(x=>x.Id == id);
       if(plant) return plant;
@@ -162,7 +183,7 @@ export const CERReportPage = ()=> {
     }
 
     const handleALAExcelExport =() => {
-        alasql("SELECT Plant,[CREATED FYEAR],[APPROVED FYEAR],CER,Status,BudgetType,BudgetIdNo,AssetCategory," 
+        alasql("SELECT Plant,CompanyCode,PlantCode,[CREATED FYEAR],[APPROVED FYEAR],CER,Status,BudgetType,BudgetIdNo,AssetCategory," 
         + "Description,Purpose,CERAMount,[Proj ROI/ Payback (Yrs)],ProjectNPV,"
         + "TotalQuotedAmnt,ProjectName,ApproveDate,IsSupplemental,SupplementalNo,Created,Modified,ApprovedDate,AnnualBudget,CostCentre " 
         + "INTO XLSX('CERReport.xlsx',{headers:true}) FROM ? ",[data]);
@@ -315,6 +336,10 @@ export const CERReportPage = ()=> {
 
                   const _mplant = getPlantTitle(CER_PlantId);
 
+                  const _companycode = getPlantCompanyCode(CER_PlantId);
+                  const _code = getPlantCode(CER_PlantId);
+
+
                   const cc = deptCostCentres.find(x=>x.Id == CER_DeptCostCentreId);
 
                   const _annualBudget = annualBudget.find(x=>x.Title == _mplant);
@@ -326,6 +351,8 @@ export const CERReportPage = ()=> {
                   return {
                       CER:CER_RefNo,
                       Plant:_mplant,
+                      CompanyCode:_companycode,
+                      PlantCode:_code,
                       Status:CER_ItemStatus,
                       'CREATED FYEAR':FYEAR,
                       'APPROVED FYEAR':ApprovedDate ? getFinancialYear(ApprovedDate) : "",

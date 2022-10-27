@@ -41,6 +41,12 @@ class SiteCollectionApi {
     }
 
 
+    static CreateFile(path,url,content){
+        return myWeb.getFolderByServerRelativePath(path)
+            .files.add(url,content,true)
+    }
+
+
 }
 
 export default SiteCollectionApi;

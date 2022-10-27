@@ -17,6 +17,7 @@ import { TravelDetailsImport } from '../../components/Travel/import';
 import { TravelAdmin } from '../../components/TRAdmin';
 import GroupsPage from '../../components/Groups';
 import { SupplierMasterVendorCode } from '../../components/SupplierMaster';
+import UpdateSupplierMasterXMLPage from '../../components/SupplierMaster/update';
 import {StaffImport} from '../../components/StaffMaster/import';
 import { SupplierMasterVendorJSONCode } from '../../components/SupplierMaster/sync2';
 import { UpdateSupplierFromXMLPage } from '../../components/SupplierMaster/syncXML';
@@ -64,7 +65,7 @@ export class Dashboard extends React.Component<Dashboard.Props, Dashboard.State>
 
         case SupplierMasterSyncPath:
           case  SupplierUpdateAdminPagePath:
-          form = <SupplierMasterVendorCode />;
+          form = <UpdateSupplierMasterXMLPage />;
           break;
 
 
