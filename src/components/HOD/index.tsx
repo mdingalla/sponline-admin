@@ -6,6 +6,7 @@ import {ExportTable} from './table';
 import { EUHoDimport } from './eu';
 import { AEBHoDImport } from './aeb';
 import { INASHoDImport } from './inas';
+// import { IMSHoDImport } from './ims';
 
 export namespace HoDImport {
     export interface Props {
@@ -40,6 +41,10 @@ export const HoDImport:React.FC<HoDImport.Props> = (props)=> {
 
             case "INAS":
                 return <INASHoDImport onImport={(e)=>setData(e)} {...props} />
+
+            // case "IMS":
+            // return <IMSHoDImport onImport={(e)=>setData(e)} {...props} />
+
 
             default:
                 return null;

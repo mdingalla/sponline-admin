@@ -287,21 +287,21 @@ export const CERReportPage = ()=> {
             return ""
           }
 
-          const allCERFYears = await Promise.all(
-            getFYears.map(async i=>{
-              const fyearQuery = await CerAPI.CERReportForFyear(i);
-              return fyearQuery.map(x=>{
-                const cc = deptCostCentres.find(dc=>dc.Id == x.CER_DeptCostCentreId);
-                const costcentre = cc ? cc.Cost_x0020_Centre : getMapCCMaster(x.DeptCostCentre);
-                const plantTitle = getPlant(costcentre);
-                return {
-                  ...x,
-                  CostCentre:cc,
-                  Plant:plantTitle
-                }
-              });
-            })
-          )
+          // const allCERFYears = await Promise.all(
+          //   getFYears.map(async i=>{
+          //     const fyearQuery = await CerAPI.CERReportForFyear(i);
+          //     return fyearQuery.map(x=>{
+          //       const cc = deptCostCentres.find(dc=>dc.Id == x.CER_DeptCostCentreId);
+          //       const costcentre = cc ? cc.Cost_x0020_Centre : getMapCCMaster(x.DeptCostCentre);
+          //       const plantTitle = getPlant(costcentre);
+          //       return {
+          //         ...x,
+          //         CostCentre:cc,
+          //         Plant:plantTitle
+          //       }
+          //     });
+          //   })
+          // )
 
           const _results = result.filter(x=>{
             const _created = moment(x.Created);
@@ -317,10 +317,10 @@ export const CERReportPage = ()=> {
 
               
 
-              const getRunningTotal = (fyear,plant)=> {
-                allCERFYears.filter(x=>x.CER_ItemStatus == "APPROVED" &&
-                x)
-              }
+              // const getRunningTotal = (fyear,plant)=> {
+              //   allCERFYears.filter(x=>x.CER_ItemStatus == "APPROVED" &&
+              //   x)
+              // }
 
               const returnItems = cerItems.map((item)=>{
                   const {CER_RefNo,CER_PlantId,CER_DeptCostCentreId,Created,
